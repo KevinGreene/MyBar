@@ -1,0 +1,14 @@
+<resources>
+    <string name="hello">Hello World, MyBar!</string>
+    <string name="app_name">MyBar</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="random">Random Drink</string>
+    <string name="inv">Inventory</string>
+    <string name="canMake">Drinks I Can Make</string>
+
+<string name="main_menu">Main Menu</string>
+<string name="browse">Browse Drinks</string>
+<string name="randomCanMake">Random Drink I Can Make</string>
+<string name="mainMenu">Main Menu</string>
+<string name="save_inventory">Save Inventory</string>
+</resources>

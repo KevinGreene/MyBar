@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<Button android:id="@+id/ingredients" 
+		android:text="@string/ingredients"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="100px"/>
+	<Button android:id="@+id/canMake" 
+		android:text="@string/canMake"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"/>
+	<Button android:id="@+id/browse" 
+		android:text="@string/browse"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"/>
+	<Button android:id="@+id/random" 
+		android:text="@string/random"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"/>
+	<Button android:id="@+id/randomCanMake" 
+		android:text="@string/randomCanMake"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"/>
+	<ImageView   
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content"
+	  android:src="@drawable/edge"/>
+</LinearLayout>

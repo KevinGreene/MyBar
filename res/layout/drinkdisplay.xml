@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+    <Button android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:id="@+id/main_menu"
+        android:text="@string/main_menu" android:layout_alignParentBottom="true" />
+        
+    <LinearLayout	android:orientation="vertical"     android:layout_width="fill_parent"
+      android:layout_height="fill_parent"      android:layout_weight="1"
+      android:layout_above="@id/main_menu">
+      
+      <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"    android:layout_height="fill_parent"
+    android:id="@+id/drink_name"    android:padding="10dp"    
+    android:textSize="16sp"      android:gravity="left"/>
+  
+      <ListView android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:id="@+id/drink_ingredients"
+        android:layout_alignParentTop="true" android:layout_above="@id/main_menu" />
+        
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"    android:layout_height="fill_parent"
+    android:id="@+id/drink_instructions"    android:padding="10dp"    
+    android:textSize="16sp"      android:gravity="left"/>  
+    
+  </LinearLayout>
+
+
+</RelativeLayout>

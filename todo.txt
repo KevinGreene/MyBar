@@ -1,0 +1,18 @@
+Things to do:
+
+Get a working drink page - Displaying ingredients and amounts instead of just flashing on the bottom
+
+Inventory improvement - Being able to glance and see if you have already selected an ingredient in a prior session.
+
+Improved database - I will hopefully put in some time this Thanksgiving weekend making a much more complete database from idrink.com, with ratings
+
+Extras - 
+    Favorites
+    Shaking causes random drink (I think this would be cool, but I have no idea how the API works for this)
+    Stored inventory (have a profile of some sort that saves the owned ingredients from session to session. Might just be writing out to drinks.in?)
+
+
+
+Inventory updates don't cause any drinks to be removed
+
+Random drink appears to always be Rum and Coke. While delicious, look into this problem.
