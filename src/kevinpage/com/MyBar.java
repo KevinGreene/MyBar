@@ -14,6 +14,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * Main activity for initial View.
+ * Sets up buttons and data.
+ */
 public class MyBar extends Activity {
 
 	@Override
@@ -38,7 +42,7 @@ public class MyBar extends Activity {
 						String ing = DrinkReader.readLine();
 						if (ing.equals("0"))
 							break;
-						//TreeSet makes sure there are no duplicates
+						// TreeSet makes sure there are no duplicates
 						data.totalIngredients.add(ing);
 						data.missingIngs.add(ing);
 						String a = DrinkReader.readLine();
@@ -59,6 +63,10 @@ public class MyBar extends Activity {
 			Collections.sort(data.allDrinks);
 			data.generatedDrinks = true;
 		}
+		
+		/**
+		 * Button event for "Drinks I Can Make"
+		 */
 		final Button canMakeButton = (Button) findViewById(R.id.canMake);
 		canMakeButton.setOnClickListener(new View.OnClickListener() {
 
@@ -67,8 +75,7 @@ public class MyBar extends Activity {
 					AlertDialog.Builder adb = new AlertDialog.Builder(
 							MyBar.this);
 					adb.setTitle("Sorry");
-					adb
-							.setMessage("You can't make any drinks yet!\nUpdate your inventory first");
+					adb.setMessage("You can't make any drinks yet!\nUpdate your inventory first");
 					adb.setPositiveButton("Ok", null);
 					adb.show();
 				} else {
@@ -79,6 +86,10 @@ public class MyBar extends Activity {
 			}
 		});
 
+		/**
+		 * Button event for "Ingredients".
+		 * Sets up tabs for 'Add Items' and 'My Inventory'
+		 */
 		final Button ingredientButton = (Button) findViewById(R.id.ingredients);
 		ingredientButton.setOnClickListener(new View.OnClickListener() {
 
@@ -87,6 +98,10 @@ public class MyBar extends Activity {
 				MyBar.this.startActivity(myIntent);
 			}
 		});
+		
+		/**
+		 * Button event for "Browse Drinks"
+		 */
 		final Button browseButton = (Button) findViewById(R.id.browse);
 		browseButton.setOnClickListener(new View.OnClickListener() {
 
@@ -96,6 +111,9 @@ public class MyBar extends Activity {
 			}
 		});
 
+		/**
+		 * Button event for "Random Drink"
+		 */
 		final Button randomAllButton = (Button) findViewById(R.id.random);
 		randomAllButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -109,6 +127,9 @@ public class MyBar extends Activity {
 			}
 		});
 
+		/**
+		 * Button event for "Random Drink I Can Make"
+		 */
 		final Button randomCanMakeButton = (Button) findViewById(R.id.randomCanMake);
 		randomCanMakeButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -116,8 +137,7 @@ public class MyBar extends Activity {
 					AlertDialog.Builder adb = new AlertDialog.Builder(
 							MyBar.this);
 					adb.setTitle("Sorry");
-					adb
-							.setMessage("You can't make any drinks yet!\nUpdate your inventory first");
+					adb.setMessage("You can't make any drinks yet!\nUpdate your inventory first");
 					adb.setPositiveButton("Ok", null);
 					adb.show();
 				} else {
@@ -133,7 +153,6 @@ public class MyBar extends Activity {
 				}
 			}
 		});
-
 
 	}
 }

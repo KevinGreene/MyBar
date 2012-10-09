@@ -18,25 +18,29 @@ package kevinpage.com;
 
 import java.util.ArrayList;
 
-
+/**
+ * This class handles all of the lists needed in the application.
+ */
 public class IngredientsDatabase {
 
 	static ArrayList<String> totalIngredients = new ArrayList<String>();
 	static ArrayList<String> ownedIngredients = new ArrayList<String>();
 	static ArrayList<Drink> allDrinks = new ArrayList<Drink>();
 	static ArrayList<Drink> canMakeDrinks = new ArrayList<Drink>();
-    
-    public static ArrayList<String> getTotalIngredients() {
-    	return totalIngredients;
-    }
-    
-    public static ArrayList<String> getOwnedIngredients() {
-    	return ownedIngredients;
-    }
-    public static ArrayList<Drink> getAllDrinks() {
-    	return allDrinks;
-    }
-    public static ArrayList<Drink> getCanMakeDrinks() {
-    	return canMakeDrinks;
-    }
+
+	public static ArrayList<String> getTotalIngredients() {
+		return totalIngredients;
+	}
+
+	public static ArrayList<String> getOwnedIngredients() {
+		return ownedIngredients;
+	}
+
+	public static ArrayList<Drink> getAllDrinks() {
+		return allDrinks;
+	}
+
+	public static ArrayList<Drink> getCanMakeDrinks() {
+		return canMakeDrinks;
+	}
 }
