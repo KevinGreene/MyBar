@@ -51,7 +51,8 @@ public class Drink implements Comparable<Drink> {
 	public String toString() {
 		return this.name;
 	}
-
+	
+	@Override
 	public int compareTo(Drink drink) {
 		return this.name.compareTo(drink.name);
 	}

@@ -38,7 +38,7 @@ public class CanMakeDrinks extends Activity {
 		 * in this view
 		 */
 		lv.setOnItemClickListener(new OnItemClickListener() {
-
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 

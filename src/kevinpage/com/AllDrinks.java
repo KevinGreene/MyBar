@@ -37,7 +37,7 @@ public class AllDrinks extends Activity {
 		 * Handles user click on drink
 		 */
 		lv.setOnItemClickListener(new OnItemClickListener() {
-
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				AlertDialog.Builder adb = new AlertDialog.Builder(

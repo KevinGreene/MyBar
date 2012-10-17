@@ -45,7 +45,7 @@ public class Have extends Activity {
 		 * Handles event when user clicks ingredient to remove.
 		 */
 		lvH.setOnItemClickListener(new OnItemClickListener() {
-
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Toast.makeText(
@@ -69,6 +69,7 @@ public class Have extends Activity {
 		 */
 		final Button mainButton = (Button) findViewById(R.id.main_menu);
 		mainButton.setOnClickListener(new View.OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				data.canMakeDrinks.clear();
 				for (Drink drink : data.allDrinks) {

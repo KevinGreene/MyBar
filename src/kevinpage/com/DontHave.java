@@ -51,6 +51,7 @@ public class DontHave extends Activity {
 		 * Handles event when user clicks ingredient to add to inventory.
 		 * Adds it to My Inventory and removes it from this View.
 		 */
+		@Override
 		public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
 				Toast.makeText(

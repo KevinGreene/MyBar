@@ -23,6 +23,8 @@ import android.util.Log;
  * This class sets up database for a table of ingredients
  * @author Zach
  *
+ * TODO Change to fit more columns. This shouldn't just be for inventory. Tables
+ * for other information.
  */
 public class IngredientsSqlDatabase {
 	private static final String TAG = "IngredientsSqlDatabase";	//used later by Log
