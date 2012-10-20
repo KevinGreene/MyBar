@@ -20,22 +20,30 @@ import android.text.TextUtils;
 import android.util.Log;
 
 /**
- * This class sets up database for a table of ingredients
+ * This class sets up database for a table of ingredients as well as
+ * a table for drinks.
  * @author Zach
  *
  * TODO Change to fit more columns. This shouldn't just be for inventory. Tables
  * for other information.
  */
-public class IngredientsSqlDatabase {
-	private static final String TAG = "IngredientsSqlDatabase";	//used later by Log
+public class SqlDatabase {
+	private static final String TAG = "AllIngredientsSqlTable";	//used later by Log
+	private static final String TAG2 = "AllDrinkSqlTable";		//""
 	
-	/** The columns included in our drinks table*/
+	/** The columns included in our all-ingredients table*/
 	public static final String KEY_ID = "_id";
 	public static final String KEY_INGREDIENT = "ingredient";
 	
-	private static final String DATABASE_NAME = "ingredients";
+	/** The columns included in our all-drinks table*/
+	public static final String KEY_ID2 = "_id";
+	public static final String KEY_DRINK = "drink";
+	
+	private static final String DATABASE_NAME = "ingredients"; //TODO possible name change?
+	
 	/** TODO Make more tables for drinks, etc.*/
 	private static final String TABLE = "ingredients"; 
+	private static final String TABLE2 = "drinks";
 	private static final int DATABASE_VERSION = 1;
 	
 	private final IngredientsOpenHelper mIngredientsOpenHelper;
@@ -46,7 +54,7 @@ public class IngredientsSqlDatabase {
      * Constructor
      * @param context The Context within which to work, used to create the DB
      */
-	public IngredientsSqlDatabase(Context context){
+	public SqlDatabase(Context context){
 		mIngredientsOpenHelper = new IngredientsOpenHelper(context);
 	}
 	
@@ -156,7 +164,7 @@ public class IngredientsSqlDatabase {
         private void loadIngredients() throws IOException {
             Log.d(TAG, "Loading words...");
             final Resources resources = mHelperContext.getResources();
-            InputStream inputStream = resources.openRawResource(R.raw.ingredients);
+            InputStream inputStream = resources.openRawResource(R.raw.drinks);
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
             try {
