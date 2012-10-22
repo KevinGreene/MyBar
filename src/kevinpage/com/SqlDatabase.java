@@ -94,8 +94,8 @@ public class SqlDatabase {
      * @param columns The columns to include, if null then all are included
      * @return Cursor positioned to matching ingredient, or null if not found.
      */
-	public Cursor getIngredient(String rowId, String[] columns){
-		String selection = "rowid = ?";
+	public Cursor getIngredients(String rowId, String[] columns){
+		String selection = null; //to get all ingredients
 		String[] selectionArgs = new String[] {rowId};
 		
 		return query(selection, selectionArgs, columns);
