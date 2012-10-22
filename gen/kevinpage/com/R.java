@@ -38,7 +38,8 @@ public final class R {
     }
     public static final class raw {
         public static final int drinks=0x7f040000;
-        public static final int owned_ingredients=0x7f040001;
+        public static final int ingredients=0x7f040001;
+        public static final int owned_ingredients=0x7f040002;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
