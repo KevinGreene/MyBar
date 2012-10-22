@@ -44,9 +44,8 @@ public class SqlDatabase {
 	public static final String KEY_AMOUNTS = "amount";
 	public static final String KEY_INSTRUCTIONS = "instructions";
 	
-	private static final String DATABASE_NAME = "allDrinksIngredients"; //TODO possible name change?
+	private static final String DATABASE_NAME = "allDrinksIngredients"; 
 	
-	/** TODO Make more tables for drinks, etc.*/
 	private static final String TABLE = "ingredients"; 
 	private static final String TABLE2 = "drinks";
 	private static final int DATABASE_VERSION = 1;
@@ -91,9 +90,9 @@ public class SqlDatabase {
 	/**
      * Returns a Cursor positioned at the word specified by rowId
      * TODO Build out other queries
-     * @param rowId id of word to retrieve
+     * @param rowId id of ingredient to retrieve
      * @param columns The columns to include, if null then all are included
-     * @return Cursor positioned to matching word, or null if not found.
+     * @return Cursor positioned to matching ingredient, or null if not found.
      */
 	public Cursor getIngredient(String rowId, String[] columns){
 		String selection = "rowid = ?";
@@ -104,6 +103,19 @@ public class SqlDatabase {
 		/* This builds a query that looks like: (SQL equivalent)
          *     SELECT <columns> FROM <table> WHERE rowid = <rowId>
          */
+	}
+	
+	/**
+	 * Returns a Cursor positioned at the drink specified by rowId
+	 * @param rowId id of drink to retrieve
+     * @param columns The columns to include, if null then all are included
+     * @return Cursor positioned to matching drink, or null if not found.
+	 */
+	public Cursor getDrink(String rowId, String[] columns){
+		String selection = "rowid = ?";
+		String[] selectionArgs = new String[] {rowId};
+		
+		return query(selection, selectionArgs, columns);
 	}
 	
 	/**
@@ -119,7 +131,7 @@ public class SqlDatabase {
          * by which the ContentProvider does not need to know the real column names
          */ 
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-		/** TODO Change parameter to String[] when implement more tables*/
+		/** TODO Change parameter.. is this right?*/
 		builder.setTables(TABLE + ", " + TABLE2 );
 		builder.setProjectionMap(mColumnMap);
 		
