@@ -19,6 +19,9 @@ package kevinpage.com;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+/**
+ * Class that acts as shell to access data files
+ */
 public class data {
 	static TreeSet<String> totalIngredients = new TreeSet<String>();
 	static TreeSet<String> ownedIngredients = new TreeSet<String>();
@@ -26,7 +29,7 @@ public class data {
 	static ArrayList<Drink> allDrinks = new ArrayList<Drink>();
 	static ArrayList<Drink> canMakeDrinks = new ArrayList<Drink>();
 	static boolean generatedDrinks = false;
-	static String al2[] = (new String [data.ownedIngredients.size ()]);
+	static String[] al2 = new String[data.ownedIngredients.size()];
 	static String[] al = new String[data.totalIngredients.size()];
 
 }
