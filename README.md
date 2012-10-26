@@ -21,9 +21,7 @@ to enter their own ingredients and look up possible drinks with those
 specifications.
 
 Current features in the works:
-<<<<<<< HEAD
-=======
+
  - ability to shake for random drink
->>>>>>> upstream/master
  - implement SQLite database for quicker/more efficient data management
  - ability to enter in personal recipes for drinks
