@@ -1,6 +1,7 @@
 package kevinpage.com;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +17,9 @@ import android.widget.AdapterView.OnItemClickListener;
  * tab under 'Ingredients'
  */
 public class Have extends Activity {
-
+	
+	private SqlDatabase sqlDb;
+	
 	/**
 	 * Updates the ListView elements
 	 * @param lv The ListView display
@@ -32,6 +35,12 @@ public class Have extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
+		sqlDb = new SqlDatabase(this);
+		/** This is crashing the first time because it queries too fast... 
+		 * needs to wait on thread*/
+		Cursor ingreds = sqlDb.getAllIngredients();
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ingredients);
 		
