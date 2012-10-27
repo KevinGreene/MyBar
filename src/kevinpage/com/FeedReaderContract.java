@@ -21,7 +21,7 @@ public class FeedReaderContract{
 		public static final String TABLE2 = "ingredients";
 		public static final String KEY_ID2 = "ingred_id";
 		public static final String KEY_sINGREDIENT = "name";
-		//public static final String KEY_HAS = "has";
+		public static final String KEY_HAS = "has";
 	}
 	
 	/** The columns included in our drink-ingredients table */
