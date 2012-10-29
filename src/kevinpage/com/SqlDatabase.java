@@ -6,16 +6,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import kevinpage.com.FeedReaderContract.FeedEntry1;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
-import android.os.AsyncTask;
 import android.util.Log;
 
 public class SqlDatabase {
@@ -66,95 +62,48 @@ public class SqlDatabase {
     	SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
     	// Projection that specifies which columns we will use for query
     	String[] projection = new String[] {FeedReaderContract.FeedEntry2.KEY_sINGREDIENT};
-    	return db.query(FeedReaderContract.FeedEntry2.TABLE2, projection, null, null, 
+    	
+    	Cursor cursor = db.query(FeedReaderContract.FeedEntry2.TABLE2, projection, null, null, 
     			null, null, null);
+    	
+    	if (cursor == null) {
+            return null;
+        } else if (!cursor.moveToFirst()) {
+            cursor.close();
+            return null;
+        }
+        return cursor;
     }
-	 //TODO may not need the next 3 methods...
-	/**
-	 * Performs a database query on the table of drinks
-	 * 
-	 * @param selection
-	 *            The selection clause
-	 * @param selectionArgs
-	 *            Selection arguments for "?" components in the selection
-	 * @param columns
-	 *            The columns to return
-	 * @return A Cursor over all rows matching the query
-	 */
-	private Cursor queryDrinks(String selection, String[] selectionArgs,
-			String[] columns) {
-		/*
-		 * The SQLiteBuilder provides a map for all possible columns requested
-		 * to actual columns in the database, creating a simple column alias
-		 * mechanism by which the ContentProvider does not need to know the real
-		 * column names
-		 */
-		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-		builder.setTables(FeedReaderContract.FeedEntry1.TABLE1);
-		//builder.setProjectionMap(mDrinkColumnMap);
-
-		Cursor cursor = builder.query(mDatabaseHelper.getReadableDatabase(),
-				columns, selection, selectionArgs, null, null, null);
-
-		if (cursor == null) {
-			return null;
-		} else if (!cursor.moveToFirst()) {
-			cursor.close();
-			return null;
-		}
-		return cursor;
-	}
-	
-	/**
-	 * Performs a database query on the table of ingredients
-	 * @param selection The selection clause
-	 * @param selectionArgs Selection arguments for "?" components in the selection
-	 * @param columns The columns to return
-	 * @return A Cursor over all rows matching the query
-	 */
-	private Cursor queryIngredients(String selection, String[] selectionArgs,
-			String[] columns) {
-		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-		builder.setTables(FeedReaderContract.FeedEntry2.TABLE2);
-		//builder.setProjectionMap(mIngredientsColumnMap);
-
-		Cursor cursor = builder.query(mDatabaseHelper.getReadableDatabase(),
-				columns, selection, selectionArgs, null, null, null);
-		
-		if (cursor == null) {
-			return null;
-		} else if (!cursor.moveToFirst()) {
-			cursor.close();
-			return null;
-		}
-		return cursor;
-	}
-
-	/**
-	 * Performs a database query on the table of drink ingredients
-	 * @param selection The selection clause
-	 * @param selectionArgs Selection arguments for "?" components in the selection
-	 * @param columns The columns to return
-	 * @return A Cursor over all rows matching the query
-	 */
-	private Cursor queryDrinkIngredients(String selection, String[] selectionArgs,
-			String[] columns) {
-		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-		builder.setTables(FeedReaderContract.FeedEntry3.TABLE3);
-		//builder.setProjectionMap(mDrinkIngredientsColumnMap);
-
-		Cursor cursor = builder.query(mDatabaseHelper.getReadableDatabase(),
-				columns, selection, selectionArgs, null, null, null);
-		
-		if (cursor == null) {
-			return null;
-		} else if (!cursor.moveToFirst()) {
-			cursor.close();
-			return null;
-		}
-		return cursor;
-	}
-	
+    
+    /**
+     * Returns a Cursor over the rows of ingredients that the user has or doesn't have
+     * @param selectionArgs The arguments (probably 0 or 1) answering the selection clause
+     * @return A Cursor over the rows as specified by the selection arguments
+     */
+    public Cursor getHasIngredients(String selectionArgs){
+    	SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+    	String[] projection = new String[] {FeedReaderContract.FeedEntry2.KEY_sINGREDIENT};
+    	String selection = FeedReaderContract.FeedEntry2.KEY_HAS + " = ?";
+    	String[] singleSelection = new String[] {selectionArgs};
+    	
+    	Cursor cursor = db.query(FeedReaderContract.FeedEntry2.TABLE2, 
+    			projection, selection, singleSelection, null, null, null);
+    	if (cursor == null) {
+            return null;
+        } else if (!cursor.moveToFirst()) {
+            cursor.close();
+            return null;
+        }
+    	return cursor;
+    }
+////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * This class is used to help create, get queries, and update or delete data 
+     * from the database
+     * @author Zach
+     *
+     */
 	public static class DatabaseOpenHelper extends SQLiteOpenHelper{
 
 		private final Context mHelperContext;
@@ -200,6 +149,8 @@ public class SqlDatabase {
 		
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			Log.d(TAG, "Called onCreate..");
+			mDatabase = db;
 			db.execSQL(TABLE_CREATE1);
 			db.execSQL(TABLE_CREATE2);
 			db.execSQL(TABLE_CREATE3);
@@ -221,6 +172,17 @@ public class SqlDatabase {
 				}
 			}).start();
 		}
+		
+/*		public class InitDbTask extends AsyncTask<Boolean, Void, String> {
+
+			@Override
+			protected String doInBackground(Boolean... params) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+
+		}*/
 		
 		//TODO edit to correctly scan in raw ingredients & other data
 		private void loadTables() throws IOException {
@@ -264,8 +226,9 @@ public class SqlDatabase {
 				}
 			} finally {
 				reader.close();
+				Log.d(TAG, "Done loading database");
 			}
-			Log.d(TAG, "Done loading database");
+			
 		}
 	
 		/**
@@ -274,6 +237,7 @@ public class SqlDatabase {
 		 * @return rowId or -1 if failed
 		 */
 		public long addIngredient(String ingredient, int has) {
+			Log.d(TAG, "Adding ingredient...");
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(FeedReaderContract.FeedEntry2.KEY_sINGREDIENT, ingredient);
 			initialValues.put(FeedReaderContract.FeedEntry2.KEY_HAS, has); //assume they don't have it
@@ -287,7 +251,7 @@ public class SqlDatabase {
 		 * @return rowId or -1 if failed
 		 */
 		public long addDrink(String name, int rating, String instructions) {
-
+			Log.d(TAG, "Adding drink...");
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(FeedReaderContract.FeedEntry1.KEY_DRINK, name);
 			initialValues.put(FeedReaderContract.FeedEntry1.KEY_RATING, rating);
@@ -303,8 +267,15 @@ public class SqlDatabase {
 			return mDatabase.insert(FeedReaderContract.FeedEntry1.TABLE1, null, initialValues);
 		}
 		
+		/**
+		 * Add a drink-ingredient to its table
+		 * @param amount The amount read in for the drink
+		 * @param ingredId The matching id from the ingredient list
+		 * @param drinkId The matching id from the drink it belongs to
+		 * @return The rowId of where it was inserted, or -1 if failed
+		 */
 		public long addDrinkIngredient(String amount, long ingredId, long drinkId){
-			
+			Log.d(TAG, "Adding DRINK ingredient...");
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(FeedReaderContract.FeedEntry3.KEY_subID1, drinkId);
 			initialValues.put(FeedReaderContract.FeedEntry3.KEY_subID2, ingredId);
@@ -312,9 +283,26 @@ public class SqlDatabase {
 			
 			return mDatabase.insert(FeedReaderContract.FeedEntry3.TABLE3, null, initialValues);
 		}		
+		
+		/**
+		 * Method to update the 'has' column in the ingredients table
+		 * @param has The value to update to
+		 * @param ingredName The name of the ingredient to update
+		 * @return How many rows were affected
+		 */
+		public long updateHas(String has, String ingredName){
+			Log.d(TAG, "Updating ingredient 'has' field");
+			ContentValues initialValues = new ContentValues();
+			initialValues.put(FeedReaderContract.FeedEntry2.KEY_HAS, has);
+			String where = FeedReaderContract.FeedEntry2.KEY_sINGREDIENT + " = ?";
+			String[] whereArgs = new String[] {ingredName}; 		
+			
+			return mDatabase.update(FeedReaderContract.FeedEntry2.TABLE2, initialValues, where, whereArgs);
+		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			Log.d(TAG, "Called onUpgrade..");
 			db.execSQL(SQL_DELETE_TABLE1);
 			db.execSQL(SQL_DELETE_TABLE2);
 			db.execSQL(SQL_DELETE_TABLE3);

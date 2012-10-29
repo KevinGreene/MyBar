@@ -1,6 +1,7 @@
 package kevinpage.com;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 public class DontHave extends Activity {
 
 	static ListView lvD;
+	private SqlDatabase sqlDb;
 	
 	/**
 	 * Updates the ListView element.
@@ -34,16 +36,29 @@ public class DontHave extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ingredients);
+		
+		sqlDb = new SqlDatabase(this);
+		
+		/*InitDbTask initDb = new InitDbTask(this);
+		initDb.execute(this, null, null);
+		sqlDb = initDb.getDatabase();*/
+		Cursor ingreds = sqlDb.getHasIngredients("0");
+		String[] array = new String[ingreds.getCount()];
+		for(int i = 0; i<ingreds.getCount() && !(ingreds.isLast()); i++){
+			array[i] = ingreds.getString(0);
+			ingreds.moveToNext();
+		}
 
-		for (String ingredient : data.totalIngredients) {
+		/*for (String ingredient : data.totalIngredients) {
 			if (!data.ownedIngredients.contains(ingredient)) {
 				data.missingIngs.add(ingredient);
 			}
-		}
+		}*/
 		lvD = (ListView) findViewById(R.id.ingredient_list);
-		data.al = (String[]) data.missingIngs
-				.toArray(new String[data.missingIngs.size()]);
-		fillData(lvD, data.al);
+		/*data.al = (String[]) data.missingIngs
+				.toArray(new String[data.missingIngs.size()]);*/
+		fillData(lvD, array);
+		//fillData(lvD, data.al);
 		lvD.setTextFilterEnabled(true);
 		lvD.setOnItemClickListener(new OnItemClickListener() {
 

@@ -36,18 +36,29 @@ public class Have extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		sqlDb = new SqlDatabase(this);
-		/** This is crashing the first time because it queries too fast... 
-		 * needs to wait on thread*/
-		Cursor ingreds = sqlDb.getAllIngredients();
-		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ingredients);
 		
-		data.al2 = (String[]) data.ownedIngredients
-				.toArray(new String[data.ownedIngredients.size()]);
+		sqlDb = new SqlDatabase(this);
+		String[] array;
+		Cursor ingreds = sqlDb.getHasIngredients("1");
+		if(ingreds == null){
+			array = new String[0];
+		}
+		else{
+			array = new String[ingreds.getCount()];
+			for(int i = 0; i<ingreds.getCount() && !(ingreds.isLast()); i++){
+				array[i] = ingreds.getString(0);
+				ingreds.moveToNext();
+			}
+		}
+
+		
+		/*data.al2 = (String[]) data.ownedIngredients
+				.toArray(new String[data.ownedIngredients.size()]);*/
 		lvH = (ListView) findViewById(R.id.ingredient_list);
-		fillData(lvH, data.al2);
+		fillData(lvH, array);//
+		//fillData(lvH, data.al2);
 		lvH.setTextFilterEnabled(true);
 		
 		/**
