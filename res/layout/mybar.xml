@@ -27,5 +27,6 @@
 	<ImageView   
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
-	  android:src="@drawable/edge"/>
+	  android:src="@drawable/edge"
+	  android:contentDescription="@string/main_logo_descr"/>"
 </LinearLayout>

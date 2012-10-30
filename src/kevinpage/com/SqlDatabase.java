@@ -29,6 +29,7 @@ public class SqlDatabase {
 	 */
 	public SqlDatabase(Context context) {
 		mDatabaseHelper = new DatabaseOpenHelper(context);
+		mDatabaseHelper.getReadableDatabase();
 	}
 	
 	//TODO Build out QUERIES here

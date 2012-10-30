@@ -11,15 +11,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.util.FloatMath;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +33,7 @@ public class MyBar extends Activity {
 	private float mAccel; // acceleration apart from gravity
 	private float mAccelCurrent; // current acceleration including gravity
 	private float mAccelLast; // last acceleration including gravity
+	private SqlDatabase sqlDb;
 	
 	/**
 	 * Event Listener for accelerator
@@ -67,6 +66,15 @@ public class MyBar extends Activity {
 		}
 	}
 	
+/*	private boolean checkDatabase() {
+		SQLiteDatabase checkDB = null;
+		try{
+			checkDB = SQLiteDatabase.openDatabase(, SQLiteDatabase.OPEN_READONLY);
+		} catch(){
+			
+		}
+	}*/
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -83,6 +91,12 @@ public class MyBar extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
+		sqlDb = new SqlDatabase(this);/////////////////creates  the DB?
+		
+		//Cursor test = sqlDb.getHasIngredients("0");
+		/*data.sqlDb = this.sqlDb;*/
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mybar);
 		
