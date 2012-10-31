@@ -23,4 +23,15 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="183dp" />
 
+    <Button
+        android:id="@+id/enterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progressBar1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="54dp"
+        android:text="@string/enter_button_text"
+        android:visibility="invisible"
+        android:onClick="onEnter" />
+
 </RelativeLayout>
