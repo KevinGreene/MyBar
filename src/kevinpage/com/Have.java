@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 public class Have extends Activity {
 	
 	private SqlDatabase sqlDb;
+	static ListView lvH;
 	
 	/**
 	 * Updates the ListView elements
@@ -31,7 +32,7 @@ public class Have extends Activity {
 		lv.setAdapter(help);
 	}
 
-	static ListView lvH;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class Have extends Activity {
 		/*data.al2 = (String[]) data.ownedIngredients
 				.toArray(new String[data.ownedIngredients.size()]);*/
 		lvH = (ListView) findViewById(R.id.ingredient_list);
+		
 		fillData(lvH, array);//
 		//fillData(lvH, data.al2);
 		lvH.setTextFilterEnabled(true);
@@ -72,14 +74,50 @@ public class Have extends Activity {
 						getApplicationContext(),
 						"Removed " + (((TextView) view).getText())
 								+ " from Inventory", Toast.LENGTH_SHORT).show();
-				data.ownedIngredients.remove((((TextView) view).getText()));
-				data.missingIngs.add((((TextView) view).getText()).toString());
-				data.al = (String[]) data.missingIngs
+				
+				/*Cursor ingred = sqlDb.getHasIngredient((((TextView) view)
+						.getText()).toString());*//** TODO perhaps add check later */
+				sqlDb.updateHasValue(0, (((TextView) view).getText()).toString());
+				
+				/*data.ownedIngredients.remove((((TextView) view).getText()));
+				data.missingIngs.add((((TextView) view).getText()).toString());*/
+				
+				/** Fill in missing ingredients */
+				Cursor missingCursor = sqlDb.getHasIngredients("0");
+				String[] missingArray;
+				if(missingCursor == null){
+					missingArray = new String[0];
+				}
+				else{
+					missingArray = new String[missingCursor.getCount()];
+					for(int i = 0; i<missingCursor.getCount() && !(missingCursor.isLast()); i++){
+						missingArray[i] = missingCursor.getString(0);
+						missingCursor.moveToNext();
+					}
+				}				
+				fillData(DontHave.lvD, missingArray);
+				
+				/** Fill in ingredients they now have */
+				Cursor haveCursor = sqlDb.getHasIngredients("1");
+				String[] haveArray;
+				if(haveCursor == null){
+					haveArray = new String[0];
+				}
+				else{
+					haveArray = new String[haveCursor.getCount()];
+					for(int i = 0; i<haveCursor.getCount() && !(haveCursor.isLast()); i++){
+						haveArray[i] = haveCursor.getString(0);
+						haveCursor.moveToNext();
+					}
+				}				
+				fillData(lvH, haveArray);
+				
+				/*data.al = (String[]) data.missingIngs
 						.toArray(new String[data.missingIngs.size()]);
 				data.al2 = (String[]) data.ownedIngredients
 						.toArray(new String[data.ownedIngredients.size()]);
 				fillData(lvH, data.al2);
-				fillData(DontHave.lvD, data.al);
+				fillData(DontHave.lvD, data.al);*/
 			}
 		});
 
