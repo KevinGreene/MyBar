@@ -1,8 +1,11 @@
 package kevinpage.com;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,13 +29,34 @@ public class Have extends Activity {
 	 * @param lv The ListView display
 	 * @param array The array of data to display
 	 */
-	private void fillData(ListView lv, String[] array) {
+	private void fillData(ListView lv, ArrayList<String> array) {
 		ArrayAdapter<String> help = new ArrayAdapter<String>(
 				getApplicationContext(), R.layout.check, array);
 		lv.setAdapter(help);
 	}
 
-	
+	/**
+	 * Fills a String array based on a cursor
+	 * @param cursor The cursor to parse through
+	 * @return A String array based on data in cursor
+	 */
+	private ArrayList<String> fillArray(Cursor cursor){
+		ArrayList<String> temp;
+		if(cursor == null){
+			temp = new ArrayList<String>();
+		}
+		else{
+			temp = new ArrayList<String>(cursor.getCount());
+			for(int i = 0; i<cursor.getCount() && !(cursor.isLast()); i++){
+				if(cursor.isNull(0)){
+					break;
+				}
+				temp.add(cursor.getString(0));
+				cursor.moveToNext();
+			}
+		}
+		return temp;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,27 +64,16 @@ public class Have extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ingredients);
 		
+		
 		sqlDb = new SqlDatabase(this);
-		String[] array;
-		Cursor ingreds = sqlDb.getHasIngredients("1");
-		if(ingreds == null){
-			array = new String[0];
-		}
-		else{
-			array = new String[ingreds.getCount()];
-			for(int i = 0; i<ingreds.getCount() && !(ingreds.isLast()); i++){
-				array[i] = ingreds.getString(0);
-				ingreds.moveToNext();
-			}
-		}
-
 		
-		/*data.al2 = (String[]) data.ownedIngredients
-				.toArray(new String[data.ownedIngredients.size()]);*/
+		Cursor ingreds = sqlDb.getHasIngredients("1");		
+		
+		ArrayList<String> array = fillArray(ingreds);		
+		
 		lvH = (ListView) findViewById(R.id.ingredient_list);
-		
 		fillData(lvH, array);//
-		//fillData(lvH, data.al2);
+
 		lvH.setTextFilterEnabled(true);
 		
 		/**
@@ -70,54 +83,26 @@ public class Have extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				
 				Toast.makeText(
 						getApplicationContext(),
 						"Removed " + (((TextView) view).getText())
 								+ " from Inventory", Toast.LENGTH_SHORT).show();
 				
-				/*Cursor ingred = sqlDb.getHasIngredient((((TextView) view)
-						.getText()).toString());*//** TODO perhaps add check later */
-				sqlDb.updateHasValue(0, (((TextView) view).getText()).toString());
-				
-				/*data.ownedIngredients.remove((((TextView) view).getText()));
-				data.missingIngs.add((((TextView) view).getText()).toString());*/
-				
-				/** Fill in missing ingredients */
-				Cursor missingCursor = sqlDb.getHasIngredients("0");
-				String[] missingArray;
-				if(missingCursor == null){
-					missingArray = new String[0];
-				}
-				else{
-					missingArray = new String[missingCursor.getCount()];
-					for(int i = 0; i<missingCursor.getCount() && !(missingCursor.isLast()); i++){
-						missingArray[i] = missingCursor.getString(0);
-						missingCursor.moveToNext();
-					}
-				}				
-				fillData(DontHave.lvD, missingArray);
+
+				sqlDb.updateHasValue(0, (((TextView) view).getText()).toString());	
 				
 				/** Fill in ingredients they now have */
 				Cursor haveCursor = sqlDb.getHasIngredients("1");
-				String[] haveArray;
-				if(haveCursor == null){
-					haveArray = new String[0];
-				}
-				else{
-					haveArray = new String[haveCursor.getCount()];
-					for(int i = 0; i<haveCursor.getCount() && !(haveCursor.isLast()); i++){
-						haveArray[i] = haveCursor.getString(0);
-						haveCursor.moveToNext();
-					}
-				}				
+				ArrayList<String> haveArray = fillArray(haveCursor);	
 				fillData(lvH, haveArray);
 				
-				/*data.al = (String[]) data.missingIngs
-						.toArray(new String[data.missingIngs.size()]);
-				data.al2 = (String[]) data.ownedIngredients
-						.toArray(new String[data.ownedIngredients.size()]);
-				fillData(lvH, data.al2);
-				fillData(DontHave.lvD, data.al);*/
+				/** Fill in missing ingredients */
+				Cursor missingCursor = sqlDb.getHasIngredients("0");
+				ArrayList<String> missingArray = fillArray(missingCursor);
+				fillData(DontHave.lvD, missingArray);
+				
+				
 			}
 		});
 
@@ -129,16 +114,27 @@ public class Have extends Activity {
 		mainButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				data.canMakeDrinks.clear();
-				for (Drink drink : data.allDrinks) {
+				//data.canMakeDrinks.clear();
+				/*for (Drink drink : data.allDrinks) {
 					if (drink.canMake()) {
 						if (!data.canMakeDrinks.contains(drink))
 							data.canMakeDrinks.add(drink);
 					}
-				}
+				}*/
 				finish();
 			}
 		});
 
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		Cursor ingreds = sqlDb.getHasIngredients("1");		
+		
+		ArrayList<String> array = fillArray(ingreds);		
+		
+		lvH = (ListView) findViewById(R.id.ingredient_list);
+		fillData(lvH, array);
 	}
 }

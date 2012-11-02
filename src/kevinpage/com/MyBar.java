@@ -19,12 +19,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 /**
  * Main activity for initial View.
  * Sets up buttons and data.
+ * Version 1.1
  */
 public class MyBar extends Activity {
 
