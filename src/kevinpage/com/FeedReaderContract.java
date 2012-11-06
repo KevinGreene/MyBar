@@ -29,7 +29,8 @@ public class FeedReaderContract{
 		public static final String TABLE3 = "drinkIngredients";
 		public static final String KEY_ID3 = "_id";
 		public static final String KEY_subID1 = "drink_id";
-		public static final String KEY_subID2 = "ingred_id";
+		//public static final String KEY_subID2 = "ingred_id";//TODO get rid of this
+		public static final String KEY_ingredNAME = "name";
 		public static final String KEY_AMOUNT = "amount";		
 	}	
 }

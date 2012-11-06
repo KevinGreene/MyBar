@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
  /**
   * This class creates an activity for the 'Browse Drinks'
   * option in the application.
@@ -57,13 +56,6 @@ public class AllDrinks extends Activity {
 		ArrayList<String> drinkNames = new ArrayList<String>();
 		
 		drinkNames = fillArray(cursor);
-		
-		// Calls data file for all drinks
-		/*String[] drinkName = new String[data.allDrinks.size()];
-
-		for (int i = 0; i < data.allDrinks.size(); i++) {
-			drinkName[i] = ((data.allDrinks.get(i)).getName());
-		}*/
 
 		//The list view to display all the names of all drinks
 		ListView lv = (ListView) findViewById(R.id.makeable_drinks);
@@ -71,7 +63,7 @@ public class AllDrinks extends Activity {
 		lv.setTextFilterEnabled(true);
 
 		/**
-		 * Handles user click on drink TODO
+		 * Handles user click on drink 
 		 */
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -93,13 +85,13 @@ public class AllDrinks extends Activity {
 				
 				String message = "Ingredients: \n";
 				
-				//TODO something is wrong here...
 				Cursor drinkIngreds = sqlDb.getDrinkIngredientsId(String.valueOf(drink_id));
 
 				for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isLast()); i++){
-					Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
+					//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
+					String ingredName = drinkIngreds.getString(0);
 					drinkIngreds.moveToNext();
-					message += ingredName.getString(0) + " - " + drinkIngreds.getString(1) + "\n";
+					message += ingredName + " - " + drinkIngreds.getString(1) + "\n";
 				}
 				message += "\n";
 				message += "Instructions: \n";
@@ -108,13 +100,7 @@ public class AllDrinks extends Activity {
 				adb.setMessage(message);
 				adb.setPositiveButton("Ok", null);
 				adb.show();
-				
-				/*
-				Drink drink = data.allDrinks.get(position);
-				//adb.setTitle(drink.getDisplayTitle());
-				adb.setMessage(drink.getDisplayMessage());
-				adb.setPositiveButton("Ok", null);
-				adb.show();*/
+
 			}
 		});
 

@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
-import android.app.DownloadManager.Query;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
@@ -19,7 +17,7 @@ public class MyBarDatabase {
 
 	private static final String TAG = "SqlDatabase";
 	private final DatabaseOpenHelper mDatabaseHelper; // used for queries later
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "drinks.db";
 
 	/**
@@ -32,15 +30,6 @@ public class MyBarDatabase {
 		mDatabaseHelper = new DatabaseOpenHelper(context);
 		mDatabaseHelper.getReadableDatabase();
 		//mDatabaseHelper.close();
-	}
-
-	/**
-	 * Asks helper if database has been read in.
-	 * 
-	 * @return True if created, false otherwise.
-	 */
-	public boolean isCreated() {
-		return mDatabaseHelper.isCreated();
 	}
 
 	// TODO Build out QUERIES here
@@ -74,7 +63,7 @@ public class MyBarDatabase {
 	 */
 	public Cursor getDrinkIngredientsId(String selectionArgs){
 		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-		String[] projection = new String[] {FeedReaderContract.FeedEntry3.KEY_subID2, FeedReaderContract.FeedEntry3.KEY_AMOUNT};
+		String[] projection = new String[] {FeedReaderContract.FeedEntry3.KEY_ingredNAME, FeedReaderContract.FeedEntry3.KEY_AMOUNT};
 		String selection = FeedReaderContract.FeedEntry3.KEY_subID1 + " =?";
 		String[] ingredSelections = new String[] {selectionArgs};
 		
@@ -269,42 +258,30 @@ public class MyBarDatabase {
 
 		private final Context mHelperContext;
 		private SQLiteDatabase mDatabase;
-		private static boolean created;
-
+		
 		/** SQL to create first table of drinks */
 		private static final String TABLE_CREATE1 = "CREATE TABLE "
 				+ FeedReaderContract.FeedEntry1.TABLE1 + " ("
-				+ FeedReaderContract.FeedEntry1.KEY_ID1
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ FeedReaderContract.FeedEntry1.KEY_ID1	+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ FeedReaderContract.FeedEntry1.KEY_DRINK + " TEXT NOT NULL, "
-				+ FeedReaderContract.FeedEntry1.KEY_RATING
-				+ " INTEGER NOT NULL, "
-				+ FeedReaderContract.FeedEntry1.KEY_INSTRUCTIONS
-				+ " TEXT NOT NULL" + ");";
+				+ FeedReaderContract.FeedEntry1.KEY_RATING	+ " INTEGER NOT NULL, "
+				+ FeedReaderContract.FeedEntry1.KEY_INSTRUCTIONS + " TEXT NOT NULL" + ");";
 		/** SQL to create second table of ingredients */
 		private static final String TABLE_CREATE2 = "CREATE TABLE "
 				+ FeedReaderContract.FeedEntry2.TABLE2 + " ("
-				+ FeedReaderContract.FeedEntry2.KEY_ID2
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ FeedReaderContract.FeedEntry2.KEY_sINGREDIENT
-				+ " TEXT UNIQUE NOT NULL," + FeedReaderContract.FeedEntry2.KEY_HAS
-				+ " INTEGER NOT NULL" + ");";
+				+ FeedReaderContract.FeedEntry2.KEY_ID2	+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ FeedReaderContract.FeedEntry2.KEY_sINGREDIENT	+ " TEXT UNIQUE NOT NULL," 
+				+ FeedReaderContract.FeedEntry2.KEY_HAS	+ " INTEGER NOT NULL" + ");";
 		/** SQL to create third table of drink-ingredients */
 		private static final String TABLE_CREATE3 = "CREATE TABLE "
 				+ FeedReaderContract.FeedEntry3.TABLE3 + " ("
-				+ FeedReaderContract.FeedEntry3.KEY_ID3
-				+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ FeedReaderContract.FeedEntry3.KEY_subID1
-				+ " INTEGER NOT NULL,"
-				+ FeedReaderContract.FeedEntry3.KEY_subID2
-				+ " INTEGER NOT NULL,"
+				+ FeedReaderContract.FeedEntry3.KEY_ID3	+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ FeedReaderContract.FeedEntry3.KEY_subID1	+ " INTEGER NOT NULL,"
 				+ FeedReaderContract.FeedEntry3.KEY_AMOUNT + " TEXT NOT NULL,"
+				+ FeedReaderContract.FeedEntry3.KEY_ingredNAME + " TEXT NOT NULL," //TODO this needs to be implemented
 				+ "FOREIGN KEY(" + FeedReaderContract.FeedEntry3.KEY_subID1
 				+ ") REFERENCES " + FeedReaderContract.FeedEntry1.TABLE1 + "("
-				+ FeedReaderContract.FeedEntry1.KEY_ID1 + ")," + "FOREIGN KEY("
-				+ FeedReaderContract.FeedEntry3.KEY_subID2 + ") REFERENCES "
-				+ FeedReaderContract.FeedEntry2.TABLE2 + "("
-				+ FeedReaderContract.FeedEntry2.KEY_ID2 + ")" + ");";
+				+ FeedReaderContract.FeedEntry1.KEY_ID1 + ")"+ ");";
 
 		private static final String SQL_DELETE_TABLE1 = "DROP TABLE IF EXISTS "
 				+ FeedReaderContract.FeedEntry1.TABLE1;
@@ -361,14 +338,14 @@ public class MyBarDatabase {
 				while ((line = reader.readLine()) != null) {// get Drink name
 					drinkIngredients.clear();
 					amounts.clear();
-					long ingredRowId = -1, drinkRowId = -1;
+					long drinkRowId = -1;
 					int r = Integer.parseInt(reader.readLine());// get Drink
 																// rating
 					while (true) {
 						String ing = reader.readLine(); // get ingred name
 						if (ing.equals("0")) // stop if it was 0
 							break;
-						ingredRowId = addIngredient(ing, 0); // add that
+						addIngredient(ing, 0); // add that
 																// ingredient
 																// name and get
 																// rowId
@@ -387,7 +364,7 @@ public class MyBarDatabase {
 					 */
 					if (!(drinkIngredients.isEmpty())) {
 						for (int i = 0; i < drinkIngredients.size(); i++) {
-							addDrinkIngredient(amounts.get(i), ingredRowId,
+							addDrinkIngredient(amounts.get(i), drinkIngredients.get(i),
 									drinkRowId);
 						}
 					}
@@ -395,7 +372,6 @@ public class MyBarDatabase {
 			} finally {
 				reader.close();
 				//mDatabase.close();
-				created = true;
 				Log.d(TAG, "Done loading database");
 			}
 
@@ -456,15 +432,16 @@ public class MyBarDatabase {
 		 * @param drinkId
 		 *            The matching id from the drink it belongs to
 		 * @return The rowId of where it was inserted, or -1 if failed
+		 * TODO
 		 */
-		public long addDrinkIngredient(String amount, long ingredId,
+		public long addDrinkIngredient(String amount, String name,
 				long drinkId) {
 			Log.d(TAG, "Adding DRINK ingredient...");
 			ContentValues initialValues = new ContentValues();
 			initialValues
 					.put(FeedReaderContract.FeedEntry3.KEY_subID1, drinkId);
-			initialValues.put(FeedReaderContract.FeedEntry3.KEY_subID2,
-					ingredId);
+			initialValues.put(FeedReaderContract.FeedEntry3.KEY_ingredNAME,
+					name);
 			initialValues.put(FeedReaderContract.FeedEntry3.KEY_AMOUNT, amount);
 
 			return mDatabase.insert(FeedReaderContract.FeedEntry3.TABLE3, null,
@@ -500,15 +477,6 @@ public class MyBarDatabase {
 			db.execSQL(SQL_DELETE_TABLE3);
 			db.execSQL("DROP TABLE IF EXISTS " + DATABASE_NAME);
 			onCreate(db);
-		}
-
-		/**
-		 * Determines if database has been read in.
-		 * 
-		 * @return True if read in, false otherwise.
-		 */
-		public boolean isCreated() {
-			return true;//created;
 		}
 	}
 }
