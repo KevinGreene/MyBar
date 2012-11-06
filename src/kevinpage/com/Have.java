@@ -21,7 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
  */
 public class Have extends Activity {
 	
-	private SqlDatabase sqlDb;
+	private MyBarDatabase sqlDb;
 	static ListView lvH;
 	
 	/**
@@ -65,7 +65,7 @@ public class Have extends Activity {
 		setContentView(R.layout.ingredients);
 		
 		
-		sqlDb = new SqlDatabase(this);
+		sqlDb = new MyBarDatabase(this);
 		
 		Cursor ingreds = sqlDb.getHasIngredients("1");		
 		
@@ -75,6 +75,11 @@ public class Have extends Activity {
 		fillData(lvH, array);//
 
 		lvH.setTextFilterEnabled(true);
+		
+		/** Fill in missing ingredients TODO*//*
+		Cursor missingCursor = sqlDb.getHasIngredients("0");
+		ArrayList<String> missingArray = fillArray(missingCursor);
+		fillData(DontHave.lvD, missingArray);*/
 		
 		/**
 		 * Handles event when user clicks ingredient to remove.
@@ -102,7 +107,7 @@ public class Have extends Activity {
 				ArrayList<String> missingArray = fillArray(missingCursor);
 				fillData(DontHave.lvD, missingArray);
 				
-				
+				//lvH.setSelection(position); TODO
 			}
 		});
 
@@ -127,7 +132,7 @@ public class Have extends Activity {
 
 	}
 	
-	@Override
+/*	@Override
 	public void onResume(){
 		super.onResume();
 		Cursor ingreds = sqlDb.getHasIngredients("1");		
@@ -135,6 +140,6 @@ public class Have extends Activity {
 		ArrayList<String> array = fillArray(ingreds);		
 		
 		lvH = (ListView) findViewById(R.id.ingredient_list);
-		fillData(lvH, array);
-	}
+		fillData(array);
+	}*/
 }

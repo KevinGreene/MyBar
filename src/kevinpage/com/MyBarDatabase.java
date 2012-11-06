@@ -35,33 +35,11 @@ public class MyBarDatabase {
 	// TODO Build out QUERIES here
 
 	/**
-	 * Returns a Cursor positioned at the drink specified by rowId
-	 * 
-	 * @param rowId
-	 *            id of drink to retrieve
-	 * @param columns
-	 *            The columns to include, if null then all are included
-	 * @return Cursor positioned to matching word, or null if not found.
-	 */
-	/*
-	 * public Cursor getDrink(String rowId, String[] columns) { String selection
-	 * = "rowid = ?"; String[] selectionArgs = new String[] {rowId}; // columns
-	 * will probably look like (KEY_DRINK, KEY_RATING, KEY_INSTRUCTIONS) //
-	 * selection like * (null) if we wanted all drinks // selectionArgs
-	 * specifying WHERE clause (based on columns chosen) return query(selection,
-	 * selectionArgs, columns);
-	 * 
-	 * This builds a query that looks like: SELECT <columns> FROM <table> WHERE
-	 * rowid = <rowId>
-	 * 
-	 * }
-	 */
-	/**
 	 * Returns a Cursor over the drink-ingredients as specified by the drink_id
 	 * @param selectionArgs The drink id
 	 * @return a Cursor over the ingredients connected to the drink w/ the amount
 	 */
-	public Cursor getDrinkIngredientsId(String selectionArgs){
+	public Cursor getDrinkIngredientsById(String selectionArgs){
 		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
 		String[] projection = new String[] {FeedReaderContract.FeedEntry3.KEY_ingredNAME, FeedReaderContract.FeedEntry3.KEY_AMOUNT};
 		String selection = FeedReaderContract.FeedEntry3.KEY_subID1 + " =?";
@@ -80,14 +58,14 @@ public class MyBarDatabase {
 	}
 	
 	/**
-	 * Returns an ingredient based on its id
-	 * @param selectionArgs The id of the ingredient
-	 * @return A Cursor over the drink as specified
+	 * Returns an ingredient based on its name
+	 * @param selectionArgs The name of the ingredient
+	 * @return A Cursor over the ingredient as specified
 	 */
-	public Cursor getIngredById(String selectionArgs){
+	public Cursor getIngredByName(String selectionArgs){
 		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-		String[] projection = new String[] {FeedReaderContract.FeedEntry2.KEY_sINGREDIENT};
-		String selection = FeedReaderContract.FeedEntry2.KEY_ID2 + " =?";
+		String[] projection = new String[] {FeedReaderContract.FeedEntry2.KEY_sINGREDIENT, FeedReaderContract.FeedEntry2.KEY_HAS};
+		String selection = FeedReaderContract.FeedEntry2.KEY_sINGREDIENT + " =?";
 		String[] singleSelection = new String[] {selectionArgs};
 		
 		Cursor cursor = db.query(FeedReaderContract.FeedEntry2.TABLE2, projection, selection, singleSelection, null, null, null);
@@ -128,9 +106,9 @@ public class MyBarDatabase {
 	 * Returns a Cursor over all of the ingredients
 	 * @return a Cursor over all of the ingredients in alphabetical order
 	 */
-	public Cursor getAllDrinksByName(){
+	public Cursor getAllDrinks(){
 		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-		String[] projection = new String[] { FeedReaderContract.FeedEntry1.KEY_DRINK };
+		String[] projection = new String[] { FeedReaderContract.FeedEntry1.KEY_DRINK, FeedReaderContract.FeedEntry1.KEY_ID1 };
 		String ordering = " COLLATE NOCASE";
 		
 		Cursor cursor = db.query(FeedReaderContract.FeedEntry1.TABLE1, projection, null, null, null, null, FeedReaderContract.FeedEntry1.KEY_DRINK + ordering);
@@ -144,14 +122,14 @@ public class MyBarDatabase {
 		db.close();
 		return cursor;
 	}
-	
-	/**
+/*	
+	*//**
 	 * Returns a Cursor positioned at all ingredients from table
 	 * 
 	 * @param columns
 	 *            The columns to include
 	 * @return Cursor positioned over all ingredients
-	 */
+	 *//*
 	public Cursor getAllIngredients() {
 		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
 		// Projection that specifies which columns we will use for query
@@ -168,7 +146,7 @@ public class MyBarDatabase {
 		}
 		db.close();
 		return cursor;
-	}
+	}*/
 
 	/**
 	 * Returns a Cursor over the rows of ingredients that the user has or
@@ -196,12 +174,12 @@ public class MyBarDatabase {
 		db.close();
 		return cursor;
 	}
-	
-	/**
+/*	
+	*//**
 	 * Returns a Cursor over the has value of the name of the ingredient provided.
 	 * @param selectionArgs The name of the ingredient
 	 * @return a Cursor over the has column of the ingredient
-	 */
+	 *//*
 	public Cursor getHasIngredient(String selectionArgs) {
 		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
 		String[] projection = new String[] { FeedReaderContract.FeedEntry2.KEY_HAS };
@@ -212,6 +190,65 @@ public class MyBarDatabase {
 		Cursor cursor = db.query(FeedReaderContract.FeedEntry2.TABLE2,
 				projection, selection, singleSeletion, null, null, null);
 		
+		if (cursor == null) {
+			return null;
+		} else if (!cursor.moveToFirst()) {
+			cursor.close();
+			return null;
+		}
+		db.close();
+		return cursor;
+	}*/
+	
+	/**
+	 * Gets a Cursor over all possible drinks the user can make
+	 * @return A Cursor over all possible drink combinations
+	 */
+	public Cursor getPossibleDrinks() {
+		Log.d("HEYEYYYYEYEY", "GOT INSIDE");
+		
+		//int count = 0;
+		ArrayList<String> validDrinks = new ArrayList<String>();
+		Cursor allDrinks = getAllDrinks();
+		for(int i = 0; i < allDrinks.getCount() && !(allDrinks.isAfterLast()); i++ ){
+			String drinkName = allDrinks.getString(0);
+			Cursor drinkIgreds = getDrinkIngredientsById(allDrinks.getString(1));
+			boolean soFarSoGood = true;
+			for(int j = 0; j < drinkIgreds.getCount() && !(drinkIgreds.isAfterLast()); j++){
+				if(getIngredByName(drinkIgreds.getString(0)).getInt(1) == 0){
+					soFarSoGood = false;
+					break;
+				}
+				drinkIgreds.moveToLast();
+			}
+			if(soFarSoGood){
+				validDrinks.add(drinkName);
+			}
+			soFarSoGood = true;
+			allDrinks.moveToNext();
+		}
+		
+		if(validDrinks.isEmpty()){ return null; } //there are no possible drinks
+		
+		String inOp = "(";
+		for(int k = 0; k < validDrinks.size(); k++){
+			inOp += "?";
+			if(k < validDrinks.size()-1){ inOp+=","; }
+		}
+		inOp += ")";
+		
+		String[] projection = new String[] {FeedReaderContract.FeedEntry1.KEY_DRINK};
+		String selection = FeedReaderContract.FeedEntry1.KEY_DRINK + " IN" + inOp;
+		String[] selections = new String[validDrinks.size()];
+		for(int z = 0; z < validDrinks.size(); z++){
+			selections[z] = validDrinks.get(z);
+		}
+		
+		
+		//String[] projection = new String[] {FeedReaderContract.FeedEntry3.KEY_ingredNAME, FeedReaderContract.FeedEntry3.KEY_AMOUNT};
+		//String selection = FeedReaderContract.FeedEntry2.KEY_HAS + " =?";
+		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+		Cursor cursor = db.query(FeedReaderContract.FeedEntry1.TABLE1, projection, selection, selections, null, null, null);
 		if (cursor == null) {
 			return null;
 		} else if (!cursor.moveToFirst()) {

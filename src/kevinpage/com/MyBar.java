@@ -35,7 +35,7 @@ public class MyBar extends Activity {
 	private float mAccel; // acceleration apart from gravity
 	private float mAccelCurrent; // current acceleration including gravity
 	private float mAccelLast; // last acceleration including gravity
-	private SqlDatabase sqlDb;
+	private MyBarDatabase sqlDb;
 	
 	/**
 	 * Event Listener for accelerator
@@ -94,7 +94,8 @@ public class MyBar extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		sqlDb = new SqlDatabase(this);/////////////////creates  the DB?
+		sqlDb = new MyBarDatabase(this);/////////////////creates  the DB?
+		sqlDb.getAllDrinks();
 		
 		//Cursor test = sqlDb.getHasIngredients("0");
 		/*data.sqlDb = this.sqlDb;*/
@@ -165,7 +166,7 @@ public class MyBar extends Activity {
 		canMakeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (data.canMakeDrinks.isEmpty()) {
+				if (sqlDb.getPossibleDrinks() == null) {
 					AlertDialog.Builder adb = new AlertDialog.Builder(
 							MyBar.this);
 					adb.setTitle("Sorry");

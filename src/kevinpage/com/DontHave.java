@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class DontHave extends Activity {
 
 	static ListView lvD;
-	private SqlDatabase sqlDb;
+	private MyBarDatabase sqlDb;
 	
 	/**
 	 * Updates the ListView element.
@@ -48,7 +48,7 @@ public class DontHave extends Activity {
 		}
 		else{
 			temp = new ArrayList<String>(cursor.getCount());
-			for(int i = 0; i<cursor.getCount() && !(cursor.isLast()); i++){
+			for(int i = 0; i<cursor.getCount(); i++){
 				if(cursor.isNull(0)){
 					break;
 				}
@@ -65,7 +65,7 @@ public class DontHave extends Activity {
 		setContentView(R.layout.ingredients);
 		
 		
-		sqlDb = new SqlDatabase(this);
+		sqlDb = new MyBarDatabase(this);
 
 		Cursor ingreds = sqlDb.getHasIngredients("0");
 		ArrayList<String> array = fillArray(ingreds);
@@ -73,6 +73,11 @@ public class DontHave extends Activity {
 		lvD = (ListView) findViewById(R.id.ingredient_list);
 		
 		fillData(lvD, array);
+		
+		/** Fill in ingredients they now have TODO*//*
+		Cursor haveCursor = sqlDb.getHasIngredients("1");
+		ArrayList<String> haveArray = fillArray(haveCursor);	
+		fillData(Have.lvH, haveArray);*/
 		
 		lvD.setTextFilterEnabled(true);
 				
@@ -103,6 +108,8 @@ public class DontHave extends Activity {
 				Cursor haveCursor = sqlDb.getHasIngredients("1");
 				ArrayList<String> haveArray = fillArray(haveCursor);	
 				fillData(Have.lvH, haveArray);
+				
+				//lvD.setSelection(position);//TODO add this in other places
 			}
 		});
 

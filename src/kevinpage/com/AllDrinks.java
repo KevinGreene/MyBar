@@ -52,7 +52,7 @@ public class AllDrinks extends Activity {
 		
 		sqlDb = new MyBarDatabase(this);
 		
-		Cursor cursor = sqlDb.getAllDrinksByName();
+		Cursor cursor = sqlDb.getAllDrinks();
 		ArrayList<String> drinkNames = new ArrayList<String>();
 		
 		drinkNames = fillArray(cursor);
@@ -85,7 +85,7 @@ public class AllDrinks extends Activity {
 				
 				String message = "Ingredients: \n";
 				
-				Cursor drinkIngreds = sqlDb.getDrinkIngredientsId(String.valueOf(drink_id));
+				Cursor drinkIngreds = sqlDb.getDrinkIngredientsById(String.valueOf(drink_id));
 
 				for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isLast()); i++){
 					//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
