@@ -15,7 +15,7 @@ public class LoadingScreen extends Activity {
 
 	// private ProgressBar progressBar;
 	// private CountDownTimer cdt;
-	private SqlDatabase sqlDb;
+	private MyBarDatabase sqlDb;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class LoadingScreen extends Activity {
 
 			@Override
 			protected Void doInBackground(Void... params) {
-				sqlDb = new SqlDatabase(context);
+				sqlDb = new MyBarDatabase(context);
 
 				return null;
 			}

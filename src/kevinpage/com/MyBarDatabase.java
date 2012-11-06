@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import android.app.DownloadManager.Query;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
@@ -14,7 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class SqlDatabase {
+public class MyBarDatabase {
 
 	private static final String TAG = "SqlDatabase";
 	private final DatabaseOpenHelper mDatabaseHelper; // used for queries later
@@ -27,9 +28,10 @@ public class SqlDatabase {
 	 * @param context
 	 *            The Context within which to work, used to create the DB
 	 */
-	public SqlDatabase(Context context) {
+	public MyBarDatabase(Context context) {
 		mDatabaseHelper = new DatabaseOpenHelper(context);
 		mDatabaseHelper.getReadableDatabase();
+		//mDatabaseHelper.close();
 	}
 
 	/**
@@ -65,7 +67,95 @@ public class SqlDatabase {
 	 * 
 	 * }
 	 */
-
+	/**
+	 * Returns a Cursor over the drink-ingredients as specified by the drink_id
+	 * @param selectionArgs The drink id
+	 * @return a Cursor over the ingredients connected to the drink w/ the amount
+	 */
+	public Cursor getDrinkIngredientsId(String selectionArgs){
+		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+		String[] projection = new String[] {FeedReaderContract.FeedEntry3.KEY_subID2, FeedReaderContract.FeedEntry3.KEY_AMOUNT};
+		String selection = FeedReaderContract.FeedEntry3.KEY_subID1 + " =?";
+		String[] ingredSelections = new String[] {selectionArgs};
+		
+		Cursor cursor = db.query(FeedReaderContract.FeedEntry3.TABLE3, projection, selection, ingredSelections, null, null, null);
+		
+		if (cursor == null) {
+			return null;
+		} else if (!cursor.moveToFirst()) {
+			cursor.close();
+			return null;
+		}
+		db.close();
+		return cursor;
+	}
+	
+	/**
+	 * Returns an ingredient based on its id
+	 * @param selectionArgs The id of the ingredient
+	 * @return A Cursor over the drink as specified
+	 */
+	public Cursor getIngredById(String selectionArgs){
+		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+		String[] projection = new String[] {FeedReaderContract.FeedEntry2.KEY_sINGREDIENT};
+		String selection = FeedReaderContract.FeedEntry2.KEY_ID2 + " =?";
+		String[] singleSelection = new String[] {selectionArgs};
+		
+		Cursor cursor = db.query(FeedReaderContract.FeedEntry2.TABLE2, projection, selection, singleSelection, null, null, null);
+		
+		if (cursor == null) {
+			return null;
+		} else if (!cursor.moveToFirst()) {
+			cursor.close();
+			return null;
+		}
+		db.close();
+		return cursor;
+	}
+	
+	/**
+	 * Returns a Cursor over the specified drink and its rating
+	 * @param selectionArgs The name of the drink
+	 * @return Cursor over drink and rating column
+	 */
+	public Cursor getDrinkInfo(String selectionArgs){
+		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+		String[] projection = new String[] {FeedReaderContract.FeedEntry1.KEY_DRINK, FeedReaderContract.FeedEntry1.KEY_RATING, FeedReaderContract.FeedEntry1.KEY_ID1, FeedReaderContract.FeedEntry1.KEY_INSTRUCTIONS};
+		String selection = FeedReaderContract.FeedEntry1.KEY_DRINK + " =?";
+		String[] singleSelection = new String[] {selectionArgs};
+		
+		Cursor cursor = db.query(FeedReaderContract.FeedEntry1.TABLE1, projection, selection, singleSelection, null, null, null);
+		if (cursor == null) {
+			return null;
+		} else if (!cursor.moveToFirst()) {
+			cursor.close();
+			return null;
+		}
+		db.close();
+		return cursor;
+	}
+	
+	/**
+	 * Returns a Cursor over all of the ingredients
+	 * @return a Cursor over all of the ingredients in alphabetical order
+	 */
+	public Cursor getAllDrinksByName(){
+		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+		String[] projection = new String[] { FeedReaderContract.FeedEntry1.KEY_DRINK };
+		String ordering = " COLLATE NOCASE";
+		
+		Cursor cursor = db.query(FeedReaderContract.FeedEntry1.TABLE1, projection, null, null, null, null, FeedReaderContract.FeedEntry1.KEY_DRINK + ordering);
+		
+		if (cursor == null) {
+			return null;
+		} else if (!cursor.moveToFirst()) {
+			cursor.close();
+			return null;
+		}
+		db.close();
+		return cursor;
+	}
+	
 	/**
 	 * Returns a Cursor positioned at all ingredients from table
 	 * 
@@ -87,6 +177,7 @@ public class SqlDatabase {
 			cursor.close();
 			return null;
 		}
+		db.close();
 		return cursor;
 	}
 
@@ -103,15 +194,17 @@ public class SqlDatabase {
 		String[] projection = new String[] { FeedReaderContract.FeedEntry2.KEY_sINGREDIENT };
 		String selection = FeedReaderContract.FeedEntry2.KEY_HAS + " = ?";
 		String[] singleSelection = new String[] { selectionArgs };
+		String ordering = " COLLATE NOCASE";
 
 		Cursor cursor = db.query(FeedReaderContract.FeedEntry2.TABLE2,
-				projection, selection, singleSelection, null, null, null);
+				projection, selection, singleSelection, null, null, FeedReaderContract.FeedEntry2.KEY_sINGREDIENT + ordering);
 		if (cursor == null) {
 			return null;
 		} else if (!cursor.moveToFirst()) {
 			cursor.close();
 			return null;
 		}
+		db.close();
 		return cursor;
 	}
 	
@@ -136,6 +229,7 @@ public class SqlDatabase {
 			cursor.close();
 			return null;
 		}
+		db.close();
 		return cursor;
 	}
 	
@@ -175,7 +269,7 @@ public class SqlDatabase {
 
 		private final Context mHelperContext;
 		private SQLiteDatabase mDatabase;
-		private boolean created = false;
+		private static boolean created;
 
 		/** SQL to create first table of drinks */
 		private static final String TABLE_CREATE1 = "CREATE TABLE "
@@ -193,7 +287,7 @@ public class SqlDatabase {
 				+ FeedReaderContract.FeedEntry2.KEY_ID2
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ FeedReaderContract.FeedEntry2.KEY_sINGREDIENT
-				+ " TEXT NOT NULL," + FeedReaderContract.FeedEntry2.KEY_HAS
+				+ " TEXT UNIQUE NOT NULL," + FeedReaderContract.FeedEntry2.KEY_HAS
 				+ " INTEGER NOT NULL" + ");";
 		/** SQL to create third table of drink-ingredients */
 		private static final String TABLE_CREATE3 = "CREATE TABLE "
@@ -222,6 +316,7 @@ public class SqlDatabase {
 		DatabaseOpenHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 			mHelperContext = context;
+			
 		}
 
 		@Override
@@ -299,6 +394,7 @@ public class SqlDatabase {
 				}
 			} finally {
 				reader.close();
+				//mDatabase.close();
 				created = true;
 				Log.d(TAG, "Done loading database");
 			}
@@ -412,7 +508,7 @@ public class SqlDatabase {
 		 * @return True if read in, false otherwise.
 		 */
 		public boolean isCreated() {
-			return created;
+			return true;//created;
 		}
 	}
 }
