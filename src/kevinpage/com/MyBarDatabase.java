@@ -11,11 +11,10 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class MyBarDatabase {
 
-	private static final String TAG = "SqlDatabase";
+	//private static final String TAG = "SqlDatabase";
 	private final DatabaseOpenHelper mDatabaseHelper; // used for queries later
 	private static final int DATABASE_VERSION = 2;
 	private static final String DATABASE_NAME = "drinks.db";
@@ -205,7 +204,6 @@ public class MyBarDatabase {
 	 * @return A Cursor over all possible drink combinations
 	 */
 	public Cursor getPossibleDrinks() {
-		Log.d("HEYEYYYYEYEY", "GOT INSIDE");
 		
 		//int count = 0;
 		ArrayList<String> validDrinks = new ArrayList<String>();
@@ -270,7 +268,6 @@ public class MyBarDatabase {
 	 */
 	public long updateHasValue(int has, String ingredName){
 		SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-		Log.d(TAG, "Updating ingredient 'has' field");
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(FeedReaderContract.FeedEntry2.KEY_HAS, has);
 		String where = FeedReaderContract.FeedEntry2.KEY_sINGREDIENT
@@ -335,7 +332,6 @@ public class MyBarDatabase {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			Log.d(TAG, "Called onCreate..");
 			mDatabase = db;
 			db.execSQL(TABLE_CREATE1);
 			db.execSQL(TABLE_CREATE2);
@@ -368,7 +364,6 @@ public class MyBarDatabase {
 					inputStream));
 
 			try {
-				Log.d(TAG, "Loading database...");
 				String line;
 				ArrayList<String> drinkIngredients = new ArrayList<String>();
 				ArrayList<String> amounts = new ArrayList<String>();
@@ -408,8 +403,6 @@ public class MyBarDatabase {
 				}
 			} finally {
 				reader.close();
-				//mDatabase.close();
-				Log.d(TAG, "Done loading database");
 			}
 
 		}
@@ -420,7 +413,6 @@ public class MyBarDatabase {
 		 * @return rowId or -1 if failed
 		 */
 		public long addIngredient(String ingredient, int has) {
-			Log.d(TAG, "Adding ingredient...");
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(FeedReaderContract.FeedEntry2.KEY_sINGREDIENT,
 					ingredient);
@@ -440,7 +432,6 @@ public class MyBarDatabase {
 		 * @return rowId or -1 if failed
 		 */
 		public long addDrink(String name, int rating, String instructions) {
-			Log.d(TAG, "Adding drink...");
 			ContentValues initialValues = new ContentValues();
 			initialValues.put(FeedReaderContract.FeedEntry1.KEY_DRINK, name);
 			initialValues.put(FeedReaderContract.FeedEntry1.KEY_RATING, rating);
@@ -473,7 +464,6 @@ public class MyBarDatabase {
 		 */
 		public long addDrinkIngredient(String amount, String name,
 				long drinkId) {
-			Log.d(TAG, "Adding DRINK ingredient...");
 			ContentValues initialValues = new ContentValues();
 			initialValues
 					.put(FeedReaderContract.FeedEntry3.KEY_subID1, drinkId);
@@ -508,7 +498,6 @@ public class MyBarDatabase {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.d(TAG, "Called onUpgrade..");
 			db.execSQL(SQL_DELETE_TABLE1);
 			db.execSQL(SQL_DELETE_TABLE2);
 			db.execSQL(SQL_DELETE_TABLE3);

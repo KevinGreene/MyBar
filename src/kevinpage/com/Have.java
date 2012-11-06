@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -107,7 +106,7 @@ public class Have extends Activity {
 				ArrayList<String> missingArray = fillArray(missingCursor);
 				fillData(DontHave.lvD, missingArray);
 				
-				//lvH.setSelection(position); TODO
+				lvH.setSelection(position); 
 			}
 		});
 

@@ -5,28 +5,20 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 /**
  * Main activity for initial View.
  * Sets up buttons and data.
- * Version 1.1
+ * Version 1.2
  */
 public class MyBar extends Activity {
 
@@ -119,7 +111,7 @@ public class MyBar extends Activity {
 		/**
 		 * Read in all drinks from raw file.
 		 * TODO move data reading-in to FeedReaderContract
-		 */
+		 *//*
 		if (!data.generatedDrinks) {
 			String line;
 			InputStream is2 = getResources().openRawResource(R.raw.drinks);
@@ -157,7 +149,7 @@ public class MyBar extends Activity {
 
 			Collections.sort(data.allDrinks);
 			data.generatedDrinks = true;
-		}
+		}*/
 		
 		/**
 		 * Button event for "Drinks I Can Make"
@@ -231,7 +223,7 @@ public class MyBar extends Activity {
 		randomCanMakeButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (data.canMakeDrinks.isEmpty()) {
+				if (sqlDb.getPossibleDrinks() == null) {
 					AlertDialog.Builder adb = new AlertDialog.Builder(
 							MyBar.this);
 					adb.setTitle("Sorry");
@@ -239,13 +231,37 @@ public class MyBar extends Activity {
 					adb.setPositiveButton("Ok", null);
 					adb.show();
 				} else {
-					int randomIndex = (int) (Math.random() * data.canMakeDrinks
-							.size());
+					Cursor possibleDrinks = sqlDb.getPossibleDrinks();
+					int randomIndex = (int) (Math.random() * possibleDrinks.getCount());
+					possibleDrinks.moveToPosition(randomIndex);
 					AlertDialog.Builder adb = new AlertDialog.Builder(
 							MyBar.this);
-					Drink drink = data.canMakeDrinks.get(randomIndex);
-					adb.setTitle(drink.getDisplayTitle());
-					adb.setMessage(drink.getDisplayMessage());
+					
+					String drinkName = possibleDrinks.getString(0);
+					
+					Cursor cDrink = sqlDb.getDrinkInfo(drinkName);
+					adb.setTitle(cDrink.getString(0) + " - Rating: " + cDrink.getString(1));
+					
+					int drink_id = cDrink.getInt(2);
+					
+					String instructions = cDrink.getString(3);
+					
+					String message = "Ingredients: \n";
+					
+					Cursor drinkIngreds = sqlDb.getDrinkIngredientsById(String.valueOf(drink_id));
+
+					for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isAfterLast()); i++){
+						//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
+						String ingredName = drinkIngreds.getString(0);
+						message += ingredName + " - " + drinkIngreds.getString(1) + "\n";
+						drinkIngreds.moveToNext();
+					}
+					message += "\n";
+					message += "Instructions: \n";
+					message += instructions;
+					
+
+					adb.setMessage(message);
 					adb.setPositiveButton("Ok", null);
 					adb.show();
 				}
@@ -259,12 +275,38 @@ public class MyBar extends Activity {
 	 */
 	public  void randomDrink(){
 		//AlertDialog ad;
-		int randomIndex = (int) (Math.random() * data.allDrinks.size());
+		Cursor allDrinks = sqlDb.getAllDrinks();
+		int randomIndex = (int) (Math.random() * allDrinks.getCount());
+		allDrinks.moveToPosition(randomIndex);
 		AlertDialog.Builder adb = new AlertDialog.Builder(MyBar.this);
-		Drink drink = data.allDrinks.get(randomIndex);
-		adb.setTitle(drink.getDisplayTitle());
-		adb.setMessage(drink.getDisplayMessage());
-		adb.setPositiveButton("Ok", null);	
+		
+		
+		String drinkName = allDrinks.getString(0);
+		
+		Cursor cDrink = sqlDb.getDrinkInfo(drinkName);
+		adb.setTitle(cDrink.getString(0) + " - Rating: " + cDrink.getString(1));
+		
+		int drink_id = cDrink.getInt(2);
+		
+		String instructions = cDrink.getString(3);
+		
+		String message = "Ingredients: \n";
+		
+		Cursor drinkIngreds = sqlDb.getDrinkIngredientsById(String.valueOf(drink_id));
+
+		for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isAfterLast()); i++){
+			//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
+			String ingredName = drinkIngreds.getString(0);
+			message += ingredName + " - " + drinkIngreds.getString(1) + "\n";
+			drinkIngreds.moveToNext();
+		}
+		message += "\n";
+		message += "Instructions: \n";
+		message += instructions;
+		
+
+		adb.setMessage(message);
+		adb.setPositiveButton("Ok", null);
 		adb.show();
 	}
 }

@@ -23,6 +23,9 @@ import java.util.TreeSet;
  * Class that acts as shell to access data files
  */
 public class data {
+	
+	static MyBarDatabase sqlDb;
+	
 	static TreeSet<String> totalIngredients = new TreeSet<String>();
 	static TreeSet<String> ownedIngredients = new TreeSet<String>();
 	static TreeSet<String> missingIngs = new TreeSet<String>();

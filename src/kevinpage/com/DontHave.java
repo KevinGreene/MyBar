@@ -4,9 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.graphics.SweepGradient;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -109,7 +107,7 @@ public class DontHave extends Activity {
 				ArrayList<String> haveArray = fillArray(haveCursor);	
 				fillData(Have.lvH, haveArray);
 				
-				//lvD.setSelection(position);//TODO add this in other places
+				lvD.setSelection(position);
 			}
 		});
 

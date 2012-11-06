@@ -33,6 +33,7 @@ public class CanMakeDrinks extends Activity {
 		Cursor drinks = sqlDb.getPossibleDrinks();
 		for(int i = 0; i < drinks.getCount() && !(drinks.isAfterLast()); i++){
 			drinkNames.add(drinks.getString(0));
+			drinks.moveToNext();
 		}
 		
 		/*// Calls data file for possible drinks based on ingredients
@@ -74,11 +75,11 @@ public class CanMakeDrinks extends Activity {
 				
 				Cursor drinkIngreds = sqlDb.getDrinkIngredientsById(String.valueOf(drink_id));
 
-				for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isLast()); i++){
+				for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isAfterLast()); i++){
 					//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
 					String ingredName = drinkIngreds.getString(0);
-					drinkIngreds.moveToNext();
 					message += ingredName + " - " + drinkIngreds.getString(1) + "\n";
+					drinkIngreds.moveToNext();
 				}
 				message += "\n";
 				message += "Instructions: \n";
