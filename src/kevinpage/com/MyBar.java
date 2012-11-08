@@ -54,7 +54,7 @@ public class MyBar extends Activity {
 	 * On shake function
 	 */
 	public void onShake() {
-		if (mAccel >= 2.5) {
+		if (mAccel >= 2.75) {
 			myVib.vibrate(50);
 			randomDrink();
 		}
@@ -170,6 +170,7 @@ public class MyBar extends Activity {
 					adb.show();
 				} else {
 					Cursor possibleDrinks = sqlDb.getPossibleDrinks();
+					
 					int randomIndex = (int) (Math.random() * possibleDrinks.getCount());
 					possibleDrinks.moveToPosition(randomIndex);
 					AlertDialog.Builder adb = new AlertDialog.Builder(
@@ -210,8 +211,7 @@ public class MyBar extends Activity {
 	 * Function handles call to generate random drink and display.
 	 * TODO Implement code to clear previous messages before another shake
 	 */
-	public  void randomDrink(){
-		//AlertDialog ad;
+	public void randomDrink(){
 		Cursor allDrinks = sqlDb.getAllDrinks();
 		int randomIndex = (int) (Math.random() * allDrinks.getCount());
 		allDrinks.moveToPosition(randomIndex);

@@ -153,6 +153,9 @@ public class MyBarDatabase {
 	 */
 	public Cursor getPossibleDrinks() {
 
+		//TODO
+		data.canMakeDrinks.clear();
+		
 		ArrayList<String> validDrinks = new ArrayList<String>();
 		Cursor allDrinks = getAllDrinks();
 		for(int i = 0; i < allDrinks.getCount() && !(allDrinks.isAfterLast()); i++ ){
@@ -168,6 +171,8 @@ public class MyBarDatabase {
 			}
 			if(soFarSoGood){
 				validDrinks.add(drinkName);
+				//TODO
+				data.canMakeDrinks.add(drinkName);
 			}
 			soFarSoGood = true;
 			allDrinks.moveToNext();
