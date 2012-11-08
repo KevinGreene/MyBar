@@ -39,6 +39,12 @@
         </activity>
         <activity android:name=".DontHave" >
         </activity>
+        <activity android:name=".MyFood" >
+        </activity>
+        <activity android:name=".AddDrinks" >
+        </activity>
+        <activity android:name=".TabInventory2" >
+        </activity>
         
     </application>
 

@@ -152,9 +152,6 @@ public class MyBarDatabase {
 	 * @return A Cursor over all possible drink combinations
 	 */
 	public Cursor getPossibleDrinks() {
-
-		//TODO
-		data.canMakeDrinks.clear();
 		
 		ArrayList<String> validDrinks = new ArrayList<String>();
 		Cursor allDrinks = getAllDrinks();
@@ -171,8 +168,7 @@ public class MyBarDatabase {
 			}
 			if(soFarSoGood){
 				validDrinks.add(drinkName);
-				//TODO
-				data.canMakeDrinks.add(drinkName);
+
 			}
 			soFarSoGood = true;
 			allDrinks.moveToNext();
@@ -409,7 +405,7 @@ public class MyBarDatabase {
 		 * @param drinkId
 		 *            The matching id from the drink it belongs to
 		 * @return The rowId of where it was inserted, or -1 if failed
-		 * TODO
+		 * 
 		 */
 		public long addDrinkIngredient(String amount, String name,
 				long drinkId) {
