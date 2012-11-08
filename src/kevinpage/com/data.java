@@ -23,14 +23,12 @@ import java.util.TreeSet;
  * Class that acts as shell to access data files
  */
 public class data {
-	
-	static MyBarDatabase sqlDb;
-	
+
 	static TreeSet<String> totalIngredients = new TreeSet<String>();
 	static TreeSet<String> ownedIngredients = new TreeSet<String>();
 	static TreeSet<String> missingIngs = new TreeSet<String>();
 	static ArrayList<Drink> allDrinks = new ArrayList<Drink>();
-	static ArrayList<Drink> canMakeDrinks = new ArrayList<Drink>();
+	static ArrayList<String> canMakeDrinks = new ArrayList<String>();
 	static boolean generatedDrinks = false;
 	static String[] al2 = new String[data.ownedIngredients.size()];
 	static String[] al = new String[data.totalIngredients.size()];

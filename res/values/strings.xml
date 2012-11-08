@@ -10,11 +10,16 @@
     <string name="browse">Browse Drinks</string>
     <string name="randomCanMake">Random Drink I Can Make</string>
     <string name="mainMenu">Main Menu</string>
+    <string name="addNewDrink">Add New Drink</string>
+    <string name="newDrinkName">Name Of Drink</string>
+    <string name="addIngredient">Add Ingredient</string>
+    <string name="saveNewDrink">Save</string>
     <string name="save_inventory">Save Inventory</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_loading_screen">LoadingScreen</string>
     <string name="main_logo_descr">Main Logo</string>
     <string name="enter_button_text">Enter</string>
+    <string name="allFoods">Foods</string>
 
 </resources>

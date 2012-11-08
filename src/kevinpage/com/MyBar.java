@@ -138,7 +138,8 @@ public class MyBar extends Activity {
 		browseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), AllDrinks.class);
+				//Intent myIntent = new Intent(v.getContext(), AllDrinks.class);
+				Intent myIntent = new Intent(v.getContext(), TabInventory2.class);
 				MyBar.this.startActivity(myIntent);
 			}
 		});
@@ -203,6 +204,18 @@ public class MyBar extends Activity {
 					adb.setPositiveButton("Ok", null);
 					adb.show();
 				}
+			}
+		});
+		
+		 /**
+		 * Button event for "Next"
+		 */
+		final Button nextButton = (Button) findViewById(R.id.next);
+		nextButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent myIntent = new Intent(v.getContext(), MyFood.class);
+				MyBar.this.startActivity(myIntent);
 			}
 		});
 
