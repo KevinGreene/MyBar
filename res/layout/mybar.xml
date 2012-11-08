@@ -28,5 +28,10 @@
 	  android:layout_width="wrap_content"
 	  android:layout_height="wrap_content"
 	  android:src="@drawable/edge"
-	  android:contentDescription="@string/main_logo_descr"/>"
+	  android:contentDescription="@string/main_logo_descr"/>
+	<Button
+	    android:id="@+id/next"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:text="Next Page" />
 </LinearLayout>
