@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+	<Button
+	    android:id="@+id/food"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="50px"
+	    android:text="Foods" />
+
+	<Button
+	    android:id="@+id/addfood"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="Add Food" />
+
+	<ImageView
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:contentDescription="@string/main_logo_descr"
+	    android:src="@drawable/edge" />
+
+	<Button
+	    android:id="@+id/previous"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:text="Previous Page" />
+
+"
+</LinearLayout>

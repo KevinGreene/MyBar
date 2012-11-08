@@ -1,6 +1,9 @@
 package kevinpage.com;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,39 +21,64 @@ import android.widget.Toast;
 public class DontHave extends Activity {
 
 	static ListView lvD;
+	private MyBarDatabase sqlDb;
 	
 	/**
 	 * Updates the ListView element.
 	 * @param lv The ListView object
 	 * @param array The array of drinks
 	 */
-	private void fillData(ListView lv, String[] array) {
+	private void fillData(ListView lv, ArrayList<String> array) {
 		ArrayAdapter<String> help = new ArrayAdapter<String>(
 				getApplicationContext(), R.layout.check, array);
 		lv.setAdapter(help);
+	}
+	
+	/**
+	 * Fills a String array based on a cursor
+	 * @param cursor The cursor to parse through
+	 * @return A String array based on data in cursor
+	 */
+	private ArrayList<String> fillArray(Cursor cursor){
+		ArrayList<String> temp;
+		if(cursor == null){
+			temp = new ArrayList<String>();
+		}
+		else{
+			temp = new ArrayList<String>(cursor.getCount());
+			for(int i = 0; i<cursor.getCount(); i++){
+				if(cursor.isNull(0)){
+					break;
+				}
+				temp.add(cursor.getString(0));
+				cursor.moveToNext();
+			}
+		}
+		return temp;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ingredients);
+		
+		
+		sqlDb = new MyBarDatabase(this);
 
-		for (String ingredient : data.totalIngredients) {
-			if (!data.ownedIngredients.contains(ingredient)) {
-				data.missingIngs.add(ingredient);
-			}
-		}
+		Cursor ingreds = sqlDb.getHasIngredients("0");
+		ArrayList<String> array = fillArray(ingreds);
+		
 		lvD = (ListView) findViewById(R.id.ingredient_list);
-		data.al = (String[]) data.missingIngs
-				.toArray(new String[data.missingIngs.size()]);
-		fillData(lvD, data.al);
+		
+		fillData(lvD, array);
+		
 		lvD.setTextFilterEnabled(true);
-		lvD.setOnItemClickListener(new OnItemClickListener() {
-
+				
 		/**
 		 * Handles event when user clicks ingredient to add to inventory.
 		 * Adds it to My Inventory and removes it from this View.
 		 */
+		lvD.setOnItemClickListener(new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view,
 				int position, long id) {
@@ -58,19 +86,23 @@ public class DontHave extends Activity {
 						getApplicationContext(),
 						"Added " + (((TextView) view).getText())
 								+ " to Inventory", Toast.LENGTH_SHORT).show();
-				if (!data.ownedIngredients.contains((((TextView) view)
-						.getText()).toString())) {
-					data.ownedIngredients.add((((TextView) view).getText())
-							.toString());
-				}
-				data.missingIngs.remove((((TextView) view).getText())
-						.toString());
-				data.al = (String[]) data.missingIngs
-						.toArray(new String[data.missingIngs.size()]);
-				data.al2 = (String[]) data.ownedIngredients
-						.toArray(new String[data.ownedIngredients.size()]);
-				fillData(lvD, data.al);
-				fillData(Have.lvH, data.al2);
+
+				
+				sqlDb.updateHasValue(1, (((TextView) view)
+						.getText()).toString());
+				
+
+				/** Fill in missing ingredients */
+				Cursor missingCursor = sqlDb.getHasIngredients("0");
+				ArrayList<String> missingArray = fillArray(missingCursor);
+				fillData(lvD, missingArray);
+				
+				/** Fill in ingredients they now have */
+				Cursor haveCursor = sqlDb.getHasIngredients("1");
+				ArrayList<String> haveArray = fillArray(haveCursor);	
+				fillData(Have.lvH, haveArray);
+				
+				lvD.setSelection(position == 0 ? 0 : position-1 );
 			}
 		});
 
@@ -82,13 +114,6 @@ public class DontHave extends Activity {
 		final Button mainButton = (Button) findViewById(R.id.main_menu);
 		mainButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				data.canMakeDrinks.clear();
-				for (Drink drink : data.allDrinks) {
-					if (drink.canMake()) {
-						if (!data.canMakeDrinks.contains(drink))
-							data.canMakeDrinks.add(drink);
-					}
-				}
 				finish();
 			}
 		});
