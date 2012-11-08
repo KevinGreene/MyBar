@@ -18,7 +18,7 @@ import android.widget.Button;
 /**
  * Main activity for initial View.
  * Sets up buttons and data.
- * Version 1.2
+ * Version 2.0
  */
 public class MyBar extends Activity {
 
