@@ -8,9 +8,6 @@ import android.content.Intent;
 
 
 public class LoadingScreen extends Activity {
-
-	// private ProgressBar progressBar;
-	// private CountDownTimer cdt;
 	private MyBarDatabase sqlDb;
 
 	@Override

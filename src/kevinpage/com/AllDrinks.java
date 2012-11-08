@@ -1,5 +1,6 @@
 package kevinpage.com;
 
+
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -71,8 +73,7 @@ public class AllDrinks extends Activity {
 					int position, long id) {
 				AlertDialog.Builder adb = new AlertDialog.Builder(
 						AllDrinks.this); //Opens alert dialog box displaying drink selected
-				
-				//Toast.makeText(AllDrinks.this, "GOT HERE", Toast.LENGTH_SHORT);
+
 				
 				String drinkName = (((TextView)view).getText()).toString();
 				
@@ -100,6 +101,7 @@ public class AllDrinks extends Activity {
 				adb.setMessage(message);
 				adb.setPositiveButton("Ok", null);
 				adb.show();
+				
 
 			}
 		});
@@ -116,5 +118,6 @@ public class AllDrinks extends Activity {
 				AllDrinks.this.startActivity(myIntent);
 			}
 		});
+		
 	}
 }

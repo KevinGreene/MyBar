@@ -46,7 +46,7 @@ public class Have extends Activity {
 		}
 		else{
 			temp = new ArrayList<String>(cursor.getCount());
-			for(int i = 0; i<cursor.getCount() && !(cursor.isLast()); i++){
+			for(int i = 0; i<cursor.getCount(); i++){
 				if(cursor.isNull(0)){
 					break;
 				}
@@ -75,11 +75,6 @@ public class Have extends Activity {
 
 		lvH.setTextFilterEnabled(true);
 		
-		/** Fill in missing ingredients TODO*//*
-		Cursor missingCursor = sqlDb.getHasIngredients("0");
-		ArrayList<String> missingArray = fillArray(missingCursor);
-		fillData(DontHave.lvD, missingArray);*/
-		
 		/**
 		 * Handles event when user clicks ingredient to remove.
 		 */
@@ -101,12 +96,13 @@ public class Have extends Activity {
 				ArrayList<String> haveArray = fillArray(haveCursor);	
 				fillData(lvH, haveArray);
 				
+				
 				/** Fill in missing ingredients */
 				Cursor missingCursor = sqlDb.getHasIngredients("0");
 				ArrayList<String> missingArray = fillArray(missingCursor);
 				fillData(DontHave.lvD, missingArray);
 				
-				lvH.setSelection(position); 
+				lvH.setSelection(position == 0 ? 0 : position-1 ); 
 			}
 		});
 
@@ -118,27 +114,9 @@ public class Have extends Activity {
 		mainButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//data.canMakeDrinks.clear();
-				/*for (Drink drink : data.allDrinks) {
-					if (drink.canMake()) {
-						if (!data.canMakeDrinks.contains(drink))
-							data.canMakeDrinks.add(drink);
-					}
-				}*/
 				finish();
 			}
 		});
 
 	}
-	
-/*	@Override
-	public void onResume(){
-		super.onResume();
-		Cursor ingreds = sqlDb.getHasIngredients("1");		
-		
-		ArrayList<String> array = fillArray(ingreds);		
-		
-		lvH = (ListView) findViewById(R.id.ingredient_list);
-		fillData(array);
-	}*/
 }

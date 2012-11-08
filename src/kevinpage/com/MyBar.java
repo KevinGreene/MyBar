@@ -60,15 +60,6 @@ public class MyBar extends Activity {
 		}
 	}
 	
-/*	private boolean checkDatabase() {
-		SQLiteDatabase checkDB = null;
-		try{
-			checkDB = SQLiteDatabase.openDatabase(, SQLiteDatabase.OPEN_READONLY);
-		} catch(){
-			
-		}
-	}*/
-	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -86,12 +77,9 @@ public class MyBar extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		sqlDb = new MyBarDatabase(this);/////////////////creates  the DB?
+		sqlDb = new MyBarDatabase(this);
 		sqlDb.getAllDrinks();
-		
-		//Cursor test = sqlDb.getHasIngredients("0");
-		/*data.sqlDb = this.sqlDb;*/
-		
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mybar);
 		
@@ -107,49 +95,6 @@ public class MyBar extends Activity {
 		mAccel = 0.00f;
 		mAccelCurrent = SensorManager.GRAVITY_EARTH;
 		mAccelLast = SensorManager.GRAVITY_EARTH;
-		
-		/**
-		 * Read in all drinks from raw file.
-		 * TODO move data reading-in to FeedReaderContract
-		 *//*
-		if (!data.generatedDrinks) {
-			String line;
-			InputStream is2 = getResources().openRawResource(R.raw.drinks);
-			BufferedReader DrinkReader = new BufferedReader(
-					new InputStreamReader(is2));
-			ArrayList<String> drinkIngredients = new ArrayList<String>();
-			ArrayList<String> amounts = new ArrayList<String>();
-			try {
-				// Adds all of the drinks in the file to allDrinks
-				while ((line = DrinkReader.readLine()) != null) {
-					drinkIngredients.clear();
-					amounts.clear();
-					int r = Integer.parseInt(DrinkReader.readLine());
-					while (true) {
-						String ing = DrinkReader.readLine();
-						if (ing.equals("0"))
-							break;
-						// TreeSet makes sure there are no duplicates
-						data.totalIngredients.add(ing);
-						data.missingIngs.add(ing);
-						String a = DrinkReader.readLine();
-						drinkIngredients.add(ing);
-						amounts.add(a);
-					}
-
-					String instruct = DrinkReader.readLine();
-					Drink d = new Drink(line, r, drinkIngredients, amounts,
-							instruct);
-					data.allDrinks.add(d);
-				}
-			} catch (IOException a) {
-				// TODO Auto-generated catch block
-				a.printStackTrace();
-			}
-
-			Collections.sort(data.allDrinks);
-			data.generatedDrinks = true;
-		}*/
 		
 		/**
 		 * Button event for "Drinks I Can Make"
@@ -205,13 +150,6 @@ public class MyBar extends Activity {
 		randomAllButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				/*int randomIndex = (int) (Math.random() * data.allDrinks.size());
-				AlertDialog.Builder adb = new AlertDialog.Builder(MyBar.this);
-				Drink drink = data.allDrinks.get(randomIndex);
-				adb.setTitle(drink.getDisplayTitle());
-				adb.setMessage(drink.getDisplayMessage());
-				adb.setPositiveButton("Ok", null);
-				adb.show();*/
 				randomDrink();
 			}
 		});
@@ -251,7 +189,6 @@ public class MyBar extends Activity {
 					Cursor drinkIngreds = sqlDb.getDrinkIngredientsById(String.valueOf(drink_id));
 
 					for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isAfterLast()); i++){
-						//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
 						String ingredName = drinkIngreds.getString(0);
 						message += ingredName + " - " + drinkIngreds.getString(1) + "\n";
 						drinkIngreds.moveToNext();
@@ -295,7 +232,6 @@ public class MyBar extends Activity {
 		Cursor drinkIngreds = sqlDb.getDrinkIngredientsById(String.valueOf(drink_id));
 
 		for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isAfterLast()); i++){
-			//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
 			String ingredName = drinkIngreds.getString(0);
 			message += ingredName + " - " + drinkIngreds.getString(1) + "\n";
 			drinkIngreds.moveToNext();

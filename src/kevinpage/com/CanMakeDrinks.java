@@ -35,13 +35,6 @@ public class CanMakeDrinks extends Activity {
 			drinkNames.add(drinks.getString(0));
 			drinks.moveToNext();
 		}
-		
-		/*// Calls data file for possible drinks based on ingredients
-		String[] drinkNames = new String[data.canMakeDrinks.size()];
-
-		for (int i = 0; i < drinkNames.length; i++) {
-			drinkNames[i] = ((data.canMakeDrinks.get(i)).getName());
-		}*/
 
 		//The list view to display all the names of possible drinks
 		ListView lv = (ListView) findViewById(R.id.makeable_drinks);
@@ -60,7 +53,6 @@ public class CanMakeDrinks extends Activity {
 				// Pops up with selected drink
 				AlertDialog.Builder adb = new AlertDialog.Builder(
 						CanMakeDrinks.this);
-				//Drink drink = data.canMakeDrinks.get(position);
 				
 				String drinkName = (((TextView)view).getText()).toString();
 				
@@ -76,7 +68,6 @@ public class CanMakeDrinks extends Activity {
 				Cursor drinkIngreds = sqlDb.getDrinkIngredientsById(String.valueOf(drink_id));
 
 				for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isAfterLast()); i++){
-					//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
 					String ingredName = drinkIngreds.getString(0);
 					message += ingredName + " - " + drinkIngreds.getString(1) + "\n";
 					drinkIngreds.moveToNext();
@@ -91,12 +82,6 @@ public class CanMakeDrinks extends Activity {
 				adb.show();
 			}
 		});
-
-		// data.chosenDrink = data.canMakeDrinks.get(position);
-		// Intent myIntent = new Intent(view.getContext(), DrinkDisplay.class);
-		// CanMakeDrinks.this.startActivity(myIntent);
-		// }
-		// });
 
 		/**
 		 * Handles click to go back to main menu

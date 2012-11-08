@@ -72,11 +72,6 @@ public class DontHave extends Activity {
 		
 		fillData(lvD, array);
 		
-		/** Fill in ingredients they now have TODO*//*
-		Cursor haveCursor = sqlDb.getHasIngredients("1");
-		ArrayList<String> haveArray = fillArray(haveCursor);	
-		fillData(Have.lvH, haveArray);*/
-		
 		lvD.setTextFilterEnabled(true);
 				
 		/**
@@ -107,7 +102,7 @@ public class DontHave extends Activity {
 				ArrayList<String> haveArray = fillArray(haveCursor);	
 				fillData(Have.lvH, haveArray);
 				
-				lvD.setSelection(position);
+				lvD.setSelection(position == 0 ? 0 : position-1 );
 			}
 		});
 
@@ -119,13 +114,6 @@ public class DontHave extends Activity {
 		final Button mainButton = (Button) findViewById(R.id.main_menu);
 		mainButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				/*data.canMakeDrinks.clear();
-				for (Drink drink : data.allDrinks) {
-					if (drink.canMake()) {
-						if (!data.canMakeDrinks.contains(drink))
-							data.canMakeDrinks.add(drink);
-					}
-				}*/
 				finish();
 			}
 		});
