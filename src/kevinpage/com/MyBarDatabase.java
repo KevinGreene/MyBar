@@ -4,13 +4,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.SQLDataException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
+import kevinpage.com.FeedReaderContract.FeedEntry1;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class MyBarDatabase {
 	
@@ -31,6 +39,65 @@ public class MyBarDatabase {
 
 	// TODO Build out QUERIES here
 
+	public boolean insertDrink(String name, int rating, String instruct, ArrayList<String> ingreds, ArrayList<String> amounts){
+		
+		long drink_id = -1;
+		
+		SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();	
+		
+		Log.d("Database", "Got writable database");
+		
+		ContentValues ingredValues = new ContentValues();
+		for(int i = 0; i < ingreds.size(); i++){
+			ingredValues.put(FeedReaderContract.FeedEntry2.KEY_sINGREDIENT, ingreds.get(i));
+			ingredValues.put(FeedReaderContract.FeedEntry2.KEY_HAS, 0);
+			
+			Log.d("Inserted Into Ingredients Table", ingreds.get(i));
+			
+			try{
+				db.insertOrThrow(FeedReaderContract.FeedEntry2.TABLE2, null, ingredValues);
+			}catch(SQLException ex){
+				Log.d("Exception", "Could not insert ingredient");
+				return false;
+				
+			}
+			
+			ingredValues.clear();
+		}		
+		
+		ContentValues drinkValues = new ContentValues();
+		drinkValues.put(FeedReaderContract.FeedEntry1.KEY_DRINK, name);
+		drinkValues.put(FeedReaderContract.FeedEntry1.KEY_RATING, rating);
+		drinkValues.put(FeedReaderContract.FeedEntry1.KEY_INSTRUCTIONS, instruct);
+		try{
+			drink_id = db.insertOrThrow(FeedReaderContract.FeedEntry1.TABLE1, null, drinkValues);
+		}catch(SQLException ex){
+			Log.d("Exception", "Could not insert drink");
+			return false;
+		}
+		
+		ContentValues drinkIngredValues = new ContentValues();
+		for(int j = 0; j < ingreds.size(); j++){
+			drinkIngredValues.put(FeedReaderContract.FeedEntry3.KEY_subID1, drink_id);
+			drinkIngredValues.put(FeedReaderContract.FeedEntry3.KEY_ingredNAME, ingreds.get(j));
+			drinkIngredValues.put(FeedReaderContract.FeedEntry3.KEY_AMOUNT, amounts.get(j));
+			
+			Log.d("Drink Ingredient: ", ingreds.get(j));//TODO
+			Log.d("Drink Amount: ", amounts.get(j));//TODO
+			Log.d("Drink ID: ", String.valueOf(drink_id));//TODO
+			
+			try{
+				db.insertOrThrow(FeedReaderContract.FeedEntry3.TABLE3, null, drinkIngredValues);
+			}catch(SQLException ex){
+				Log.d("Exception", "Could not insert drink-ingredient");
+				return false;
+			}
+		}
+		
+		Log.d("Got through", "ALL INFO ADDED");
+		return true;
+	}
+	
 	/**
 	 * Returns a Cursor over the drink-ingredients as specified by the drink_id
 	 * @param selectionArgs The drink id
@@ -428,18 +495,7 @@ public class MyBarDatabase {
 		 * @param ingredName
 		 *            The name of the ingredient to update
 		 * @return How many rows were affected
-		 *//*
-		public long updateHas(int has, String ingredName) {
-			Log.d(TAG, "Updating ingredient 'has' field");
-			ContentValues initialValues = new ContentValues();
-			initialValues.put(FeedReaderContract.FeedEntry2.KEY_HAS, has);
-			String where = FeedReaderContract.FeedEntry2.KEY_sINGREDIENT
-					+ " = ?";
-			String[] whereArgs = new String[] { ingredName };
-
-			return mDatabase.update(FeedReaderContract.FeedEntry2.TABLE2,
-					initialValues, where, whereArgs);
-		}*/
+		 */
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

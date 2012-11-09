@@ -88,11 +88,12 @@ public class AllDrinks extends Activity {
 				
 				Cursor drinkIngreds = sqlDb.getDrinkIngredientsById(String.valueOf(drink_id));
 
-				for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isLast()); i++){
+				for(int i = 0; i < drinkIngreds.getCount() && !(drinkIngreds.isAfterLast()); i++){
 					//Cursor ingredName = sqlDb.getIngredById(String.valueOf(drinkIngreds.getInt(0)));
 					String ingredName = drinkIngreds.getString(0);
+					String rating = drinkIngreds.getString(1);
 					drinkIngreds.moveToNext();
-					message += ingredName + " - " + drinkIngreds.getString(1) + "\n";
+					message += ingredName + " - " + rating + "\n";
 				}
 				message += "\n";
 				message += "Instructions: \n";

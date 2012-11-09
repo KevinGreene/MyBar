@@ -16,6 +16,21 @@
              android:ems="10"
              android:hint="Name of Drink" />
 
+         <EditText
+             android:id="@+id/rating"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.10"
+             android:ems="10"
+             android:hint="Rating" />
+
+         <EditText
+             android:id="@+id/instructions"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:ems="10"
+             android:hint="Instructions" />
+
          <LinearLayout
              android:id="@+id/hlayout"
              android:layout_width="match_parent"
