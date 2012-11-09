@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:id="@+id/addNewDrinkRelativeLayout" >
+	
+    <EditText
+         android:id="@+id/addNameOfDrink"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:hint="@string/newDrinkName"
+         android:text="@string/newDrinkName" 
+         android:layout_alignParentTop="true"/>
+
+ 	<EditText 
+	    android:id="@+id/addIngredient"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" 
+	    android:hint="@string/addIngredient"
+	    android:text="@string/addIngredient" 
+	    android:layout_below="@+id/addNameOfDrink"/>
+ 	 	 	 	 	 	 	 	 	 	
+ 	<View android:id="@+id/helper" 
+		android:layout_width="0dp"
+		android:layout_height="0dp" 
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true" />
+	 
+	<Button 
+	    android:id="@+id/addAnotherIngredientButton"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/addIngredient"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentRight="true"
+		android:layout_toRightOf="@id/helper" />
+	
+	<Button
+	    android:id="@+id/saveNewDrink"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" 
+	    android:text="@string/saveNewDrink" 
+	    android:layout_alignParentBottom="true" 
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/helper" />
+
+	<ListView
+	    android:id="@+id/ingredientAggregator"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_above="@+id/addAnotherIngredientButton"
+	    android:layout_alignParentLeft="true"
+	    android:layout_alignParentRight="true"
+	    android:layout_below="@+id/addIngredient"
+	    android:ems="10"
+	    android:inputType="textMultiLine" >
+
+	    <requestFocus />
+	</ListView>
+	
+</RelativeLayout>

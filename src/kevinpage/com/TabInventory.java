@@ -17,7 +17,7 @@ public class TabInventory extends TabActivity {
 		setContentView(R.layout.tabinventory);
 
 		final TabHost tabHost = getTabHost(); // The activity TabHost
-		TabHost.TabSpec spec; // Resusable TabSpec for each tab
+		TabHost.TabSpec spec; // Reusable TabSpec for each tab
 		Intent intent; // Reusable Intent for each tab
 		// Do the same for the other tabs
 		intent = new Intent().setClass(this, DontHave.class);
@@ -35,7 +35,7 @@ public class TabInventory extends TabActivity {
 		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
 			public void onTabChanged(String tabId) {
-
+				
 			}
 		});
 
