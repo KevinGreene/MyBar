@@ -1,0 +1,90 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+         android:id="@+id/vlayout"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical" >
+
+         <EditText
+             android:id="@+id/nametext"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:ems="10"
+             android:hint="Name of Drink" />
+
+         <EditText
+             android:id="@+id/rating"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_weight="0.10"
+             android:ems="10"
+             android:hint="Rating" />
+
+         <EditText
+             android:id="@+id/instructions"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:ems="10"
+             android:hint="Instructions" />
+
+         <LinearLayout
+             android:id="@+id/hlayout"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal" >
+
+             <EditText
+                 android:id="@+id/amounttext"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="0.10"
+                 android:ems="10"
+                 android:hint="Amount 1" 
+                 android:visibility="gone"/>
+
+             <EditText
+                 android:id="@+id/ingredienttext"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="0.10"
+                 android:ems="10"
+                 android:hint="Ingredient 1" 
+                 android:visibility="gone">
+
+                 <requestFocus />
+             </EditText>
+
+         </LinearLayout>
+
+         <Button
+             android:id="@+id/addingredient"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_below="@+id/linearLayout1"
+             android:layout_centerHorizontal="true"
+             android:text="Add Ingredient" />
+
+         <Button
+             android:id="@+id/deleteingredient"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:text="Delete Ingredient" />
+
+         <Button
+             android:id="@+id/save"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:text="Save" />
+
+         <Button
+             android:id="@+id/menu"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:text="Main Menu" />
+
+     </LinearLayout>
+</ScrollView>
