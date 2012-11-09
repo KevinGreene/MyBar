@@ -3,7 +3,6 @@ package kevinpage.com;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
-
 import android.app.AlertDialog;
 
 /**
@@ -87,15 +86,4 @@ public class Drink implements Comparable<Drink> {
 		adb.setMessage(drink.getDisplayMessage());
 		adb.setPositiveButton("Ok", null);
 	}
-
-	// public boolean canMake() {
-	// Set<String> ingred = this.ingredients.keySet();
-	// boolean tf=true;
-	// for(Iterator<String> it = ingred.iterator(); it.hasNext();){
-	// if(!ownedIngredients.contains(it.next())){
-	// tf = false;
-	// }
-	// }
-	// return tf;
-	// }
 }
