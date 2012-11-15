@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -131,11 +132,18 @@ public class AddDrinks extends Activity {
 					ingreds.add(horizIngred.getText().toString());
 					amounts.add(horizAmount.getText().toString());
 				}
-				
-				if(!(sqlDb.insertDrink(namefield.getText().toString(), Integer.valueOf(ratingField.getText().toString()),
-						instructField.getText().toString(), ingreds, amounts))){
+				try{
+					if(namefield.getText().toString().equals("") || ratingField.getText().toString().equals("")
+							|| instructField.getText().toString().equals("")){
+						Toast.makeText(context, "Please fill all fields and/or remove dups", Toast.LENGTH_SHORT).show();
+					}
+					else{sqlDb.insertDrink(namefield.getText().toString(), Integer.valueOf(ratingField.getText().toString()),
+							instructField.getText().toString(), ingreds, amounts);}
+						
+				}catch(SQLiteConstraintException ex){
 					Toast.makeText(context, "Please fill all fields and/or remove dups", Toast.LENGTH_SHORT).show();
 				}
+				
 				
 				Intent myIntent = new Intent(v.getContext(), TabInventory2.class);
 				AddDrinks.this.startActivity(myIntent);

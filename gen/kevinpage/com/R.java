@@ -12,34 +12,61 @@ public final class R {
     }
     public static final class drawable {
         public static final int edge=0x7f020000;
-        public static final int ic_action_search=0x7f020001;
-        public static final int icon=0x7f020002;
+        public static final int icon=0x7f020001;
     }
     public static final class id {
-        public static final int browse=0x7f07000a;
-        public static final int canMake=0x7f070009;
-        public static final int drink_ingredients=0x7f070004;
-        public static final int drink_instructions=0x7f070005;
-        public static final int drink_name=0x7f070003;
+        public static final int addAnotherIngredientButton=0x7f070007;
+        public static final int addIngredient=0x7f070005;
+        public static final int addNameOfDrink=0x7f070004;
+        public static final int addNewDrinkRelativeLayout=0x7f070003;
+        public static final int addfood=0x7f070023;
+        public static final int addingredient=0x7f070016;
+        public static final int amounttext=0x7f070014;
+        public static final int browse=0x7f07001e;
+        public static final int canMake=0x7f07001d;
+        public static final int deleteingredient=0x7f070018;
+        public static final int drink_ingredients=0x7f07000c;
+        public static final int drink_instructions=0x7f07000d;
+        public static final int drink_name=0x7f07000b;
+        public static final int enterButton=0x7f070002;
+        public static final int food=0x7f070022;
+        public static final int helper=0x7f070006;
+        public static final int hlayout=0x7f070013;
         public static final int imageView1=0x7f070000;
-        public static final int ingredient_list=0x7f070007;
-        public static final int ingredients=0x7f070008;
-        public static final int main_menu=0x7f070002;
-        public static final int makeable_drinks=0x7f070006;
-        public static final int menu_settings=0x7f07000d;
+        public static final int ingredientAggregator=0x7f070009;
+        public static final int ingredient_list=0x7f07001b;
+        public static final int ingredients=0x7f07001c;
+        public static final int ingredienttext=0x7f070015;
+        public static final int instructions=0x7f070012;
+        public static final int linearLayout1=0x7f070017;
+        public static final int main_menu=0x7f07000a;
+        public static final int makeable_drinks=0x7f07000e;
+        public static final int menu=0x7f07001a;
+        public static final int menu_settings=0x7f070025;
+        public static final int nametext=0x7f070010;
+        public static final int next=0x7f070021;
+        public static final int previous=0x7f070024;
         public static final int progressBar1=0x7f070001;
-        public static final int random=0x7f07000b;
-        public static final int randomCanMake=0x7f07000c;
+        public static final int random=0x7f07001f;
+        public static final int randomCanMake=0x7f070020;
+        public static final int rating=0x7f070011;
+        public static final int save=0x7f070019;
+        public static final int saveNewDrink=0x7f070008;
+        public static final int vlayout=0x7f07000f;
     }
     public static final class layout {
         public static final int activity_loading_screen=0x7f030000;
-        public static final int check=0x7f030001;
-        public static final int drinkdisplay=0x7f030002;
-        public static final int drinks=0x7f030003;
-        public static final int ingredients=0x7f030004;
-        public static final int main=0x7f030005;
-        public static final int mybar=0x7f030006;
-        public static final int tabinventory=0x7f030007;
+        public static final int add_new_drink_view=0x7f030001;
+        public static final int check=0x7f030002;
+        public static final int drinkdisplay=0x7f030003;
+        public static final int drinks=0x7f030004;
+        public static final int form=0x7f030005;
+        public static final int ingredients=0x7f030006;
+        public static final int main=0x7f030007;
+        public static final int mybar=0x7f030008;
+        public static final int myfood=0x7f030009;
+        public static final int tabinventory=0x7f03000a;
+        public static final int tabinventory2=0x7f03000b;
     }
     public static final class menu {
         public static final int activity_loading_screen=0x7f060000;
@@ -48,20 +75,26 @@ public final class R {
         public static final int drinks=0x7f040000;
     }
     public static final class string {
+        public static final int addIngredient=0x7f05000c;
+        public static final int addNewDrink=0x7f05000a;
+        public static final int allFoods=0x7f050014;
         public static final int app_name=0x7f050001;
         public static final int browse=0x7f050007;
         public static final int canMake=0x7f050005;
+        public static final int enter_button_text=0x7f050013;
         public static final int hello=0x7f050000;
-        public static final int hello_world=0x7f05000b;
+        public static final int hello_world=0x7f05000f;
         public static final int ingredients=0x7f050002;
         public static final int inv=0x7f050004;
         public static final int mainMenu=0x7f050009;
-        public static final int main_logo_descr=0x7f05000e;
+        public static final int main_logo_descr=0x7f050012;
         public static final int main_menu=0x7f050006;
-        public static final int menu_settings=0x7f05000c;
+        public static final int menu_settings=0x7f050010;
+        public static final int newDrinkName=0x7f05000b;
         public static final int random=0x7f050003;
         public static final int randomCanMake=0x7f050008;
-        public static final int save_inventory=0x7f05000a;
-        public static final int title_activity_loading_screen=0x7f05000d;
+        public static final int saveNewDrink=0x7f05000d;
+        public static final int save_inventory=0x7f05000e;
+        public static final int title_activity_loading_screen=0x7f050011;
     }
 }
