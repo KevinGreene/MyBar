@@ -304,7 +304,7 @@ public class MyBarDatabase {
 
 		private final Context mHelperContext;
 		private SQLiteDatabase mDatabase;
-		
+		//TODO add UNIQUE qualifier
 		/** SQL to create first table of drinks */
 		private static final String TABLE_CREATE1 = "CREATE TABLE "
 				+ FeedReaderContract.FeedEntry1.TABLE1 + " ("
