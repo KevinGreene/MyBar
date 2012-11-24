@@ -6,6 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * Extension for application for food.
+ * TODO in progress
+ * @author Richard Wiktorowicz
+ *
+ */
 public class MyFood extends Activity {
     Button seeFoods;
     Button foodAdd;

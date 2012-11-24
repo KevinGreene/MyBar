@@ -4,13 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLDataException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-
-import kevinpage.com.FeedReaderContract.FeedEntry1;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
@@ -20,6 +14,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * This is the class that deals entirely with the database.
+ * TODO Refactor code to make more SRP; don't return Cursors
+ * @author Zach
+ *
+ */
 public class MyBarDatabase {
 	
 	private final DatabaseOpenHelper mDatabaseHelper; // used for queries later
@@ -39,6 +39,15 @@ public class MyBarDatabase {
 
 	// TODO Build out QUERIES here
 
+	/**
+	 * Insert a drink into the database with the appropriate fields.
+	 * @param name The name of the drink
+	 * @param rating The rating of the drink
+	 * @param instruct The instructions on how to make the drink
+	 * @param ingreds The arraylist of ingredients for the drink
+	 * @param amounts The matching arraylist of amounts of the ingredients
+	 * @return True if successfully inserted
+	 */
 	public boolean insertDrink(String name, int rating, String instruct, ArrayList<String> ingreds, ArrayList<String> amounts){
 		
 		long drink_id = -1;
@@ -290,8 +299,21 @@ public class MyBarDatabase {
 		db.close();
 		return rowsAffeected;
 	}
+	
+	/**
+	 * Deletes the corresponding drink from the all-drinks table ONLY
+	 * @param drinkName The name of the drink to delete
+	 * @return The number row of drink
+	 */
+	public long deleteDrink(String drinkName){
+		SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+		String selection = FeedReaderContract.FeedEntry1.KEY_DRINK + " = ?";
+		String[] selectionArgs = {drinkName};
+		
+		return db.delete(FeedReaderContract.FeedEntry1.TABLE1, selection, selectionArgs);
+	}
 
-	// //////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * This class is used to help create, get queries, and update or delete data

@@ -15,6 +15,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+/**
+ * This class adds the ability to add drinks to the database through a UI
+ * @author Richard Wiktorowicz
+ *
+ */
 public class AddDrinks extends Activity {
 	private LinearLayout vlayout;
 	private LinearLayout hlayout;
@@ -24,10 +29,7 @@ public class AddDrinks extends Activity {
 	private Button menubutton;
 	private EditText namefield;
 	private EditText ratingField;
-	private EditText instructField;
-	
-	private EditText addingredient;
-	
+	private EditText instructField;	
 	private int ingredientcount;
 	private int amountcount;
 	private int ingredientidcounter;
@@ -66,7 +68,6 @@ public class AddDrinks extends Activity {
 
 		buttonadd.setOnClickListener(new View.OnClickListener() {
 
-			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
 				hlayout = new LinearLayout(v.getContext());

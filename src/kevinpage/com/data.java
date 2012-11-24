@@ -21,6 +21,7 @@ import java.util.TreeSet;
 
 /**
  * Class that acts as shell to access data files
+ * @deprecated This class is no longer being used
  */
 public class data {
 

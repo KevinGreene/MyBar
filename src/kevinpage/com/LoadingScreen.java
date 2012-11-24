@@ -6,7 +6,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-
+/**
+ * This is the loading screen to the application that attempts to
+ * run the creation of the database in the background on startup.
+ * TODO Eventually remove this and manually insert db.
+ * @author Zach
+ *
+ */
 public class LoadingScreen extends Activity {
 	private MyBarDatabase sqlDb;
 
