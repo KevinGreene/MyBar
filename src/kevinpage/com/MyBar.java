@@ -1,5 +1,7 @@
 package kevinpage.com;
 
+import java.util.List;
+
 import android.os.Vibrator;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -206,18 +208,6 @@ public class MyBar extends Activity {
 				}
 			}
 		});
-		
-		 /**
-		 * Button event for "Next"
-		 */
-		final Button nextButton = (Button) findViewById(R.id.next);
-		nextButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), MyFood.class);
-				MyBar.this.startActivity(myIntent);
-			}
-		});
 
 	}
 	/**
@@ -225,13 +215,13 @@ public class MyBar extends Activity {
 	 * TODO Implement code to clear previous messages before another shake
 	 */
 	public void randomDrink(){
-		Cursor allDrinks = sqlDb.getAllDrinks();
-		int randomIndex = (int) (Math.random() * allDrinks.getCount());
-		allDrinks.moveToPosition(randomIndex);
+		List<String> allDrinks = sqlDb.getAllDrinks();
+		int randomIndex = (int) (Math.random() * allDrinks.size());
+		//allDrinks.moveToPosition(randomIndex);
 		AlertDialog.Builder adb = new AlertDialog.Builder(MyBar.this);
 		
 		
-		String drinkName = allDrinks.getString(0);
+		String drinkName = allDrinks.get(randomIndex);
 		
 		Cursor cDrink = sqlDb.getDrinkInfo(drinkName);
 		adb.setTitle(cDrink.getString(0) + " - Rating: " + cDrink.getString(1));

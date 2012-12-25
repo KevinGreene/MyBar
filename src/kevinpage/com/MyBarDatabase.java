@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
@@ -126,7 +128,7 @@ public class MyBarDatabase {
 			cursor.close();
 			return null;
 		}
-		db.close();
+		//db.close(); TODO
 		return cursor;
 	}
 	
@@ -154,6 +156,32 @@ public class MyBarDatabase {
 	}
 	
 	/**
+	 * Gets the drinks id by its name
+	 * @param selectionArgs The name of the drink
+	 * @return The integer id of the drink
+	 */
+	public int getDrinkIdByName(String selectionArgs){
+		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+		String[] projection = new String[] {FeedReaderContract.FeedEntry1.KEY_ID1};
+		String selection = FeedReaderContract.FeedEntry1.KEY_DRINK + " =?";
+		String[] singleSelection = new String[] {selectionArgs};
+		
+		Cursor cursor = db.query(FeedReaderContract.FeedEntry1.TABLE1, projection, selection, singleSelection, null, null, null);
+		int id = -1;
+		if (cursor == null) {
+			return id;
+		} else if (!cursor.moveToFirst()) {
+			cursor.close();
+			return id;
+		}
+		db.close();
+		
+		id = cursor.getInt(0);
+		
+		return id;
+	}
+	
+	/**
 	 * Returns a Cursor over the specified drink and its rating
 	 * @param selectionArgs The name of the drink
 	 * @return Cursor over drink and rating column
@@ -176,12 +204,12 @@ public class MyBarDatabase {
 	}
 	
 	/**
-	 * Returns a Cursor over all of the ingredients
-	 * @return a Cursor over all of the ingredients in alphabetical order
+	 * Returns a List over all of the ingredients by name
+	 * @return a List over all of the ingredients in alphabetical order by name
 	 */
-	public Cursor getAllDrinks(){
+	public List<String> getAllDrinks(){
 		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-		String[] projection = new String[] { FeedReaderContract.FeedEntry1.KEY_DRINK, FeedReaderContract.FeedEntry1.KEY_ID1 };
+		String[] projection = new String[] { FeedReaderContract.FeedEntry1.KEY_DRINK};//, FeedReaderContract.FeedEntry1.KEY_ID1 };
 		String ordering = " COLLATE NOCASE";
 		
 		Cursor cursor = db.query(FeedReaderContract.FeedEntry1.TABLE1, projection, null, null, null, null, FeedReaderContract.FeedEntry1.KEY_DRINK + ordering);
@@ -192,8 +220,18 @@ public class MyBarDatabase {
 			cursor.close();
 			return null;
 		}
-		db.close();
-		return cursor;
+		//db.close(); TODO
+		
+		List<String> temp;
+		temp = new ArrayList<String>(cursor.getCount());
+		for(int i = 0; i<cursor.getCount() && !(cursor.isLast()); i++){
+			if(cursor.isNull(0)){
+				break;
+			}
+			temp.add(cursor.getString(0));
+			cursor.moveToNext();
+		}
+		return temp;
 	}
 
 	/**
@@ -224,17 +262,51 @@ public class MyBarDatabase {
 	}
 	
 	/**
+	 * Returns whether or not the user is able to make the drink or not
+	 * @param selcectionArg the drink id
+	 * @return True if it is makable, false otherwise
+	 */
+	public boolean canMakeDrink(int drink_id){
+		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
+		int numDrinkIngreds = getDrinkIngredientsById(String.valueOf(drink_id)).getCount();
+		
+		String[] selectionArgs = new String[]{"1", String.valueOf(drink_id)};
+		
+		Cursor cursor = db.rawQuery("SELECT " + FeedReaderContract.FeedEntry2.KEY_sINGREDIENT +
+				" FROM " + FeedReaderContract.FeedEntry2.TABLE2 + " WHERE " +
+				FeedReaderContract.FeedEntry2.KEY_HAS + " =?" + " INTERSECT SELECT " +
+				FeedReaderContract.FeedEntry3.KEY_ingredNAME + " FROM " + FeedReaderContract.FeedEntry3.TABLE3 + 
+				" WHERE " + FeedReaderContract.FeedEntry3.KEY_subID1 + " =?", selectionArgs);
+		
+		//db.close();
+		
+		if(cursor.getCount() == numDrinkIngreds){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Gets a Cursor over all possible drinks the user can make
 	 * @return A Cursor over all possible drink combinations
 	 */
 	public Cursor getPossibleDrinks() {
 		
+		long startTime = System.nanoTime();//TODO
 		ArrayList<String> validDrinks = new ArrayList<String>();
-		Cursor allDrinks = getAllDrinks();
-		for(int i = 0; i < allDrinks.getCount() && !(allDrinks.isAfterLast()); i++ ){
-			String drinkName = allDrinks.getString(0);
-			Cursor drinkIgreds = getDrinkIngredientsById(allDrinks.getString(1));
-			boolean soFarSoGood = true;
+		List<String> allDrinks = getAllDrinks();
+		for(int i = 0; i < allDrinks.size(); i++ ){
+			String drinkName = allDrinks.get(i);
+			int drinkId = getDrinkIdByName(drinkName);
+			//Cursor drinkIgreds = getDrinkIngredientsById(String.valueOf(drinkId));
+			boolean canMake = canMakeDrink(drinkId);
+			
+			if(canMake){
+				validDrinks.add(drinkName);
+			}
+			
+			/*boolean soFarSoGood = true;
 			for(int j = 0; j < drinkIgreds.getCount() && !(drinkIgreds.isAfterLast()); j++){
 				if(getIngredByName(drinkIgreds.getString(0)).getInt(1) == 0){
 					soFarSoGood = false;
@@ -247,24 +319,32 @@ public class MyBarDatabase {
 
 			}
 			soFarSoGood = true;
-			allDrinks.moveToNext();
-		}
+			//allDrinks.moveToNext();
+*/		}
+		long endTime = System.nanoTime();//TODO
+		Log.d("FIRST LOOP", String.valueOf((endTime - startTime)));
 		
 		if(validDrinks.isEmpty()){ return null; } //there are no possible drinks
 		
+		startTime = System.nanoTime();//TODO
 		String inOp = "(";
 		for(int k = 0; k < validDrinks.size(); k++){
 			inOp += "?";
 			if(k < validDrinks.size()-1){ inOp+=","; }
 		}
 		inOp += ")";
+		endTime = System.nanoTime();//TODO
+		Log.d("SECOND LOOP", String.valueOf(endTime - startTime));
 		
+		startTime = System.nanoTime();//TODO
 		String[] projection = new String[] {FeedReaderContract.FeedEntry1.KEY_DRINK};
 		String selection = FeedReaderContract.FeedEntry1.KEY_DRINK + " IN" + inOp;
 		String[] selections = new String[validDrinks.size()];
 		for(int z = 0; z < validDrinks.size(); z++){
 			selections[z] = validDrinks.get(z);
 		}
+		endTime = System.nanoTime();//TODO
+		Log.d("THIRD LOOP", String.valueOf(endTime - startTime));
 
 		SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
 		Cursor cursor = db.query(FeedReaderContract.FeedEntry1.TABLE1, projection, selection, selections, null, null, null);
@@ -326,12 +406,11 @@ public class MyBarDatabase {
 
 		private final Context mHelperContext;
 		private SQLiteDatabase mDatabase;
-		//TODO add UNIQUE qualifier
 		/** SQL to create first table of drinks */
 		private static final String TABLE_CREATE1 = "CREATE TABLE "
 				+ FeedReaderContract.FeedEntry1.TABLE1 + " ("
 				+ FeedReaderContract.FeedEntry1.KEY_ID1	+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ FeedReaderContract.FeedEntry1.KEY_DRINK + " TEXT NOT NULL, "
+				+ FeedReaderContract.FeedEntry1.KEY_DRINK + " TEXT UNIQUE NOT NULL, "
 				+ FeedReaderContract.FeedEntry1.KEY_RATING	+ " INTEGER NOT NULL, "
 				+ FeedReaderContract.FeedEntry1.KEY_INSTRUCTIONS + " TEXT NOT NULL" + ");";
 		/** SQL to create second table of ingredients */
@@ -508,16 +587,6 @@ public class MyBarDatabase {
 			return mDatabase.insert(FeedReaderContract.FeedEntry3.TABLE3, null,
 					initialValues);
 		}
-
-		/**
-		 * Method to update the 'has' column in the ingredients table
-		 * 
-		 * @param has
-		 *            The value to update to
-		 * @param ingredName
-		 *            The name of the ingredient to update
-		 * @return How many rows were affected
-		 */
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

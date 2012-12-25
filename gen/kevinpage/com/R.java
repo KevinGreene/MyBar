@@ -19,7 +19,6 @@ public final class R {
         public static final int addIngredient=0x7f070005;
         public static final int addNameOfDrink=0x7f070004;
         public static final int addNewDrinkRelativeLayout=0x7f070003;
-        public static final int addfood=0x7f070023;
         public static final int addingredient=0x7f070016;
         public static final int amounttext=0x7f070014;
         public static final int browse=0x7f07001e;
@@ -29,7 +28,6 @@ public final class R {
         public static final int drink_instructions=0x7f07000d;
         public static final int drink_name=0x7f07000b;
         public static final int enterButton=0x7f070002;
-        public static final int food=0x7f070022;
         public static final int helper=0x7f070006;
         public static final int hlayout=0x7f070013;
         public static final int imageView1=0x7f070000;
@@ -42,10 +40,8 @@ public final class R {
         public static final int main_menu=0x7f07000a;
         public static final int makeable_drinks=0x7f07000e;
         public static final int menu=0x7f07001a;
-        public static final int menu_settings=0x7f070025;
+        public static final int menu_settings=0x7f070021;
         public static final int nametext=0x7f070010;
-        public static final int next=0x7f070021;
-        public static final int previous=0x7f070024;
         public static final int progressBar1=0x7f070001;
         public static final int random=0x7f07001f;
         public static final int randomCanMake=0x7f070020;
@@ -64,9 +60,8 @@ public final class R {
         public static final int ingredients=0x7f030006;
         public static final int main=0x7f030007;
         public static final int mybar=0x7f030008;
-        public static final int myfood=0x7f030009;
-        public static final int tabinventory=0x7f03000a;
-        public static final int tabinventory2=0x7f03000b;
+        public static final int tabinventory=0x7f030009;
+        public static final int tabinventory2=0x7f03000a;
     }
     public static final class menu {
         public static final int activity_loading_screen=0x7f060000;
