@@ -30,6 +30,7 @@ public class MyBar extends Activity {
 	private float mAccelCurrent; // current acceleration including gravity
 	private float mAccelLast; // last acceleration including gravity
 	private MyBarDatabase sqlDb;
+	private DBTestAdapter dbTest;
 	
 	/**
 	 * Event Listener for accelerator
@@ -80,7 +81,15 @@ public class MyBar extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		
 		sqlDb = new MyBarDatabase(this);
-		sqlDb.getAllDrinks();
+		dbTest = new DBTestAdapter(this);
+				
+		dbTest.createDatabase();
+		dbTest.open();
+		
+		Cursor cursor = dbTest.getTestData();
+		dbTest.close();
+		
+		//sqlDb.getAllDrinks(); TODO
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mybar);

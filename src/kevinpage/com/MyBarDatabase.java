@@ -1,9 +1,12 @@
 package kevinpage.com;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -26,7 +30,8 @@ public class MyBarDatabase {
 	
 	private final DatabaseOpenHelper mDatabaseHelper; // used for queries later
 	private static final int DATABASE_VERSION = 2;
-	private static final String DATABASE_NAME = "drinks.db";
+	private static final String DATABASE_NAME = "mybar.db";
+	private static String DB_PATH = "/data/data/kevinpage.com/databases/";
 
 	/**
 	 * Constructor
@@ -36,7 +41,7 @@ public class MyBarDatabase {
 	 */
 	public MyBarDatabase(Context context) {
 		mDatabaseHelper = new DatabaseOpenHelper(context);
-		mDatabaseHelper.getReadableDatabase();
+		//mDatabaseHelper.getReadableDatabase();
 	}
 
 	// TODO Build out QUERIES here
@@ -406,20 +411,23 @@ public class MyBarDatabase {
 
 		private final Context mHelperContext;
 		private SQLiteDatabase mDatabase;
+		
+		//TODO remove all commented code
+		
 		/** SQL to create first table of drinks */
-		private static final String TABLE_CREATE1 = "CREATE TABLE "
+/*		private static final String TABLE_CREATE1 = "CREATE TABLE "
 				+ FeedReaderContract.FeedEntry1.TABLE1 + " ("
 				+ FeedReaderContract.FeedEntry1.KEY_ID1	+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ FeedReaderContract.FeedEntry1.KEY_DRINK + " TEXT UNIQUE NOT NULL, "
 				+ FeedReaderContract.FeedEntry1.KEY_RATING	+ " INTEGER NOT NULL, "
 				+ FeedReaderContract.FeedEntry1.KEY_INSTRUCTIONS + " TEXT NOT NULL" + ");";
-		/** SQL to create second table of ingredients */
+		*//** SQL to create second table of ingredients *//*
 		private static final String TABLE_CREATE2 = "CREATE TABLE "
 				+ FeedReaderContract.FeedEntry2.TABLE2 + " ("
 				+ FeedReaderContract.FeedEntry2.KEY_ID2	+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ FeedReaderContract.FeedEntry2.KEY_sINGREDIENT	+ " TEXT UNIQUE NOT NULL," 
 				+ FeedReaderContract.FeedEntry2.KEY_HAS	+ " INTEGER NOT NULL" + ");";
-		/** SQL to create third table of drink-ingredients */
+		*//** SQL to create third table of drink-ingredients *//*
 		private static final String TABLE_CREATE3 = "CREATE TABLE "
 				+ FeedReaderContract.FeedEntry3.TABLE3 + " ("
 				+ FeedReaderContract.FeedEntry3.KEY_ID3	+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -435,28 +443,37 @@ public class MyBarDatabase {
 		private static final String SQL_DELETE_TABLE2 = "DROP TABLE IF EXISTS "
 				+ FeedReaderContract.FeedEntry2.TABLE2;
 		private static final String SQL_DELETE_TABLE3 = "DROP TABLE IF EXISTS "
-				+ FeedReaderContract.FeedEntry3.TABLE3;
+				+ FeedReaderContract.FeedEntry3.TABLE3;*/
 
 		DatabaseOpenHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 			mHelperContext = context;
+			DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
 			
 		}
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			mDatabase = db;
-			db.execSQL(TABLE_CREATE1);
-			db.execSQL(TABLE_CREATE2);
-			db.execSQL(TABLE_CREATE3);
-			db.execSQL("PRAGMA foreign_keys=ON;");// enable foreign keys
-			loadTableData();
+			//db.execSQL(TABLE_CREATE1);
+			//db.execSQL(TABLE_CREATE2);
+			//db.execSQL(TABLE_CREATE3);
+			//db.execSQL("PRAGMA foreign_keys=ON;");// enable foreign keys
+			
+			try {
+				copyDataBase();
+			} catch (IOException e) {
+				throw new Error("Error copying database");
+			}
+			
+			Log.d("DatabaseOpenHelper", "onCreate");
+			//loadTableData();
 		}
 
 		/**
 		 * Starts a thread to load the database table with words
 		 */
-		private void loadTableData() {
+/*		private void loadTableData() {
 			new Thread(new Runnable() {
 				public void run() {
 					try {
@@ -466,9 +483,9 @@ public class MyBarDatabase {
 					}
 				}
 			}).start();
-		}
+		}*/
 
-		private void loadTables() throws IOException {
+/*		private void loadTables() throws IOException {
 			// Log.d(TAG, "Loading ingredients...");
 			// Log.d(TAG2, "Loading drinks...");
 			final Resources resources = mHelperContext.getResources();
@@ -503,10 +520,10 @@ public class MyBarDatabase {
 					String instruct = reader.readLine(); // instructions for
 															// drink
 					drinkRowId = addDrink(line, r, instruct); // add the drink
-					/**
+					*//**
 					 * If ingredients were read in for the drink, add it to the
 					 * db with the correct row id's
-					 */
+					 *//*
 					if (!(drinkIngredients.isEmpty())) {
 						for (int i = 0; i < drinkIngredients.size(); i++) {
 							addDrinkIngredient(amounts.get(i), drinkIngredients.get(i),
@@ -518,7 +535,7 @@ public class MyBarDatabase {
 				reader.close();
 			}
 
-		}
+		}*/
 
 		/**
 		 * Add an ingredient to the table.
@@ -588,12 +605,100 @@ public class MyBarDatabase {
 					initialValues);
 		}
 
+		
+		public void createDataBase() throws IOException {
+			boolean dbExist = checkDataBase();
+			if (dbExist) {
+				Log.d("DatabaseOpenHelper", "DATBASE EXISTS");
+			} else {
+			
+				this.getReadableDatabase();
+				this.close();
+				
+				Log.v("database", "databae is being copied from assets to new db file");
+				try {
+					copyDataBase();
+				} catch (IOException e) {
+					throw new Error("Error copying database");
+				}
+			}
+		}
+
+		private boolean checkDataBase() {
+			
+			/*Log.d("DatabaseOpenHelper", "checkDatabase");
+			File dbFile = new File(DB_PATH + DATABASE_NAME);
+			return dbFile.exists();*/
+			SQLiteDatabase checkDB = null;
+			try {
+				String myPath = DB_PATH + DATABASE_NAME;
+				checkDB = SQLiteDatabase.openDatabase(myPath, null,
+						SQLiteDatabase.OPEN_READONLY);
+			} catch (SQLiteException e) {
+			}
+			if (checkDB != null) {
+				checkDB.close();
+			}
+			return checkDB != null ? true : false;
+		}
+
+		private void copyDataBase() throws IOException {
+			// Open your local db as the input stream
+			InputStream myInput = mHelperContext.getAssets().open(DATABASE_NAME);
+
+			// Path to the just created empty db
+			String outFileName = DB_PATH + DATABASE_NAME;
+
+			// Open the empty db as the output stream
+			OutputStream myOutput = new FileOutputStream(outFileName);
+
+			// transfer bytes from the inputfile to the outputfile
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = myInput.read(buffer)) > 0) {
+				myOutput.write(buffer, 0, length);
+			}
+
+			// Close the streams
+			myOutput.flush();
+			myOutput.close();
+			myInput.close();
+			Log.d("DatabaseOpenHelper", "copydatabase");
+		}
+
+		public void openDataBase() throws SQLException {
+			// Open the database
+			String myPath = DB_PATH + DATABASE_NAME;
+			
+			/*mDatabase.execSQL(
+					"CREATE TABLE IF NOT EXISTS \"android_metadata\" (\"locale\" TEXT DEFAULT 'en_US')"
+					); mDatabase.execSQL("INSERT INTO \"android_metadata\" VALUES ('en_US')"
+					);*/
+
+			//Log.d("openDataBase", "meta_data");
+			try{
+				mDatabase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);//SQLiteDatabase.NO_LOCALIZED_COLLATORS);//SQLiteDatabase.CREATE_IF_NECESSARY);
+			}catch(SQLException e){
+				Log.e("openDatabase", e.toString());
+			}
+			
+			//return mDatabase != null;
+		}
+		
+		@Override
+	    public synchronized void close() 
+	    {
+	        if(mDatabase != null)
+	            mDatabase.close();
+	        super.close();
+	    }
+		
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL(SQL_DELETE_TABLE1);
-			db.execSQL(SQL_DELETE_TABLE2);
-			db.execSQL(SQL_DELETE_TABLE3);
-			db.execSQL("DROP TABLE IF EXISTS " + DATABASE_NAME);
+			//db.execSQL(SQL_DELETE_TABLE1);
+			//db.execSQL(SQL_DELETE_TABLE2);
+			//db.execSQL(SQL_DELETE_TABLE3);
+			//db.execSQL("DROP TABLE IF EXISTS " + DATABASE_NAME);
 			onCreate(db);
 		}
 	}
