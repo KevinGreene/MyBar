@@ -1,5 +1,7 @@
 package kevinpage.com;
 
+import java.util.List;
+
 import android.os.Vibrator;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -18,7 +20,7 @@ import android.widget.Button;
 /**
  * Main activity for initial View.
  * Sets up buttons and data.
- * Version 2.0
+ * Version 2.1
  */
 public class MyBar extends Activity {
 
@@ -28,6 +30,7 @@ public class MyBar extends Activity {
 	private float mAccelCurrent; // current acceleration including gravity
 	private float mAccelLast; // last acceleration including gravity
 	private MyBarDatabase sqlDb;
+	private DBTestAdapter dbTest;
 	
 	/**
 	 * Event Listener for accelerator
@@ -78,7 +81,15 @@ public class MyBar extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		
 		sqlDb = new MyBarDatabase(this);
-		sqlDb.getAllDrinks();
+		dbTest = new DBTestAdapter(this);
+				
+		dbTest.createDatabase();
+		dbTest.open();
+		
+		Cursor cursor = dbTest.getTestData();
+		dbTest.close();
+		
+		//sqlDb.getAllDrinks(); TODO
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mybar);
@@ -206,18 +217,6 @@ public class MyBar extends Activity {
 				}
 			}
 		});
-		
-		 /**
-		 * Button event for "Next"
-		 */
-		final Button nextButton = (Button) findViewById(R.id.next);
-		nextButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent myIntent = new Intent(v.getContext(), MyFood.class);
-				MyBar.this.startActivity(myIntent);
-			}
-		});
 
 	}
 	/**
@@ -225,13 +224,13 @@ public class MyBar extends Activity {
 	 * TODO Implement code to clear previous messages before another shake
 	 */
 	public void randomDrink(){
-		Cursor allDrinks = sqlDb.getAllDrinks();
-		int randomIndex = (int) (Math.random() * allDrinks.getCount());
-		allDrinks.moveToPosition(randomIndex);
+		List<String> allDrinks = sqlDb.getAllDrinks();
+		int randomIndex = (int) (Math.random() * allDrinks.size());
+		//allDrinks.moveToPosition(randomIndex);
 		AlertDialog.Builder adb = new AlertDialog.Builder(MyBar.this);
 		
 		
-		String drinkName = allDrinks.getString(0);
+		String drinkName = allDrinks.get(randomIndex);
 		
 		Cursor cDrink = sqlDb.getDrinkInfo(drinkName);
 		adb.setTitle(cDrink.getString(0) + " - Rating: " + cDrink.getString(1));
