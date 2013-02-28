@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 /**
  * This class handles queries for each drink and its
  * required structure.
+ * @deprecated This class is no longer being used
  */
 public class Drink implements Comparable<Drink> {
 

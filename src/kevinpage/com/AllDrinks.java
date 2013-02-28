@@ -2,20 +2,24 @@ package kevinpage.com;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import kevinpage.com.MyBarDatabase;
+
  /**
   * This class creates an activity for the 'Browse Drinks'
   * option in the application.
@@ -29,7 +33,7 @@ public class AllDrinks extends Activity {
 	 * @param cursor The cursor to parse through
 	 * @return A String array based on data in cursor
 	 */
-	private ArrayList<String> fillArray(Cursor cursor){
+/*	private ArrayList<String> fillArray(Cursor cursor){
 		ArrayList<String> temp;
 		if(cursor == null){
 			temp = new ArrayList<String>();
@@ -45,7 +49,7 @@ public class AllDrinks extends Activity {
 			}
 		}
 		return temp;
-	}
+	}*/
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,10 +58,10 @@ public class AllDrinks extends Activity {
 		
 		sqlDb = new MyBarDatabase(this);
 		
-		Cursor cursor = sqlDb.getAllDrinks();
-		ArrayList<String> drinkNames = new ArrayList<String>();
+		List<String> drinkNames = sqlDb.getAllDrinks();
+		//ArrayList<String> drinkNames = new ArrayList<String>();
 		
-		drinkNames = fillArray(cursor);
+		//drinkNames = fillArray(cursor);
 
 		//The list view to display all the names of all drinks
 		ListView lv = (ListView) findViewById(R.id.makeable_drinks);
@@ -105,6 +109,36 @@ public class AllDrinks extends Activity {
 				
 
 			}
+		});
+		
+		/**
+		 * Listener for long clicks on items
+		 */
+		lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, final View arg1,
+					int arg2, long arg3) {
+				
+				final String drinkName = (((TextView)arg1).getText()).toString();
+				
+				AlertDialog.Builder adb = new AlertDialog.Builder(AllDrinks.this);
+				adb.setMessage("Are you sure you want to delete this drink?").setTitle("Delete Drink");
+				adb.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			               sqlDb.deleteDrink(drinkName);
+			               Intent i = new Intent(arg1.getContext(), TabInventory2.class);
+			               finish();
+			               startActivity(i);
+			           }
+			       });
+				adb.setNegativeButton("Cancel", null);
+				
+				adb.show();
+				
+				return false;
+			}
+			
 		});
 
 		/**

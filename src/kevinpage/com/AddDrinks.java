@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -14,6 +15,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+/**
+ * This class adds the ability to add drinks to the database through a UI
+ * @author Richard Wiktorowicz
+ *
+ */
 public class AddDrinks extends Activity {
 	private LinearLayout vlayout;
 	private LinearLayout hlayout;
@@ -23,10 +29,7 @@ public class AddDrinks extends Activity {
 	private Button menubutton;
 	private EditText namefield;
 	private EditText ratingField;
-	private EditText instructField;
-	
-	private EditText addingredient;
-	
+	private EditText instructField;	
 	private int ingredientcount;
 	private int amountcount;
 	private int ingredientidcounter;
@@ -65,7 +68,6 @@ public class AddDrinks extends Activity {
 
 		buttonadd.setOnClickListener(new View.OnClickListener() {
 
-			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
 				hlayout = new LinearLayout(v.getContext());
@@ -131,11 +133,18 @@ public class AddDrinks extends Activity {
 					ingreds.add(horizIngred.getText().toString());
 					amounts.add(horizAmount.getText().toString());
 				}
-				
-				if(!(sqlDb.insertDrink(namefield.getText().toString(), Integer.valueOf(ratingField.getText().toString()),
-						instructField.getText().toString(), ingreds, amounts))){
+				try{
+					if(namefield.getText().toString().equals("") || ratingField.getText().toString().equals("")
+							|| instructField.getText().toString().equals("")){
+						Toast.makeText(context, "Please fill all fields and/or remove dups", Toast.LENGTH_SHORT).show();
+					}
+					else{sqlDb.insertDrink(namefield.getText().toString(), Integer.valueOf(ratingField.getText().toString()),
+							instructField.getText().toString(), ingreds, amounts);}
+						
+				}catch(SQLiteConstraintException ex){
 					Toast.makeText(context, "Please fill all fields and/or remove dups", Toast.LENGTH_SHORT).show();
 				}
+				
 				
 				Intent myIntent = new Intent(v.getContext(), TabInventory2.class);
 				AddDrinks.this.startActivity(myIntent);
